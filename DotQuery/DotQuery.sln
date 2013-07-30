@@ -5,6 +5,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotQuery.Core", "DotQuery.C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotQuery.Core.Portable", "DotQuery.Core.Portable\DotQuery.Core.Portable.csproj", "{160F3728-5C63-4724-B25C-D2CB3BA211A8}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nuget", "Nuget", "{531E5D07-2C45-44F8-BE1B-0B6C3F43BB26}"
+	ProjectSection(SolutionItems) = preProject
+		DotQuery.Core.nuspec = DotQuery.Core.nuspec
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

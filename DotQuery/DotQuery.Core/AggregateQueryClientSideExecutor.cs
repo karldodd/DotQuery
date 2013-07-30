@@ -39,8 +39,6 @@ namespace DotQuery.Core
                     results.Add(default(TResult));
                 }
 
-                bool hasError = false;
-
                 //wait all one by one pattern
                 while (taskList.Count > 0)
                 {
@@ -60,9 +58,12 @@ namespace DotQuery.Core
                     }
                     else
                     {
-                        hasError = true;
                         Exception exp = completedTask.Exception.InnerExceptions.FirstOrDefault(); //unwrap aggregate exception
-                        throw exp;
+
+                        if (exp != null)
+                        {
+                            throw exp;
+                        }
                     }
 
                     taskList.RemoveAt(index);
