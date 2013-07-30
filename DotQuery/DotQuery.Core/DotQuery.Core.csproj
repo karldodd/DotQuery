@@ -55,6 +55,7 @@
     <Compile Include="IQueryCache.cs" />
     <Compile Include="QueryExecutor.cs" />
     <Compile Include="QueryOptions.cs" />
+    <Compile Include="SimpleQueryCache.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
