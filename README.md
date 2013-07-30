@@ -11,3 +11,4 @@ Features:
  * cross platform (has a portable version as well as net45)
  * flexible and extensible
  * supports multi-query as a single query out of the box
+ * dependency injection friendly
