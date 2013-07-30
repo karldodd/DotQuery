@@ -50,6 +50,9 @@
     <Compile Include="..\DotQuery.Core\IQueryCache.cs">
       <Link>IQueryCache.cs</Link>
     </Compile>
+    <Compile Include="..\DotQuery.Core\IQueryProducer.cs">
+      <Link>IQueryProducer.cs</Link>
+    </Compile>
     <Compile Include="..\DotQuery.Core\QueryBase.cs">
       <Link>QueryBase.cs</Link>
     </Compile>
@@ -58,6 +61,9 @@
     </Compile>
     <Compile Include="..\DotQuery.Core\QueryOptions.cs">
       <Link>QueryOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\DotQuery.Core\SimpleQueryCache.cs">
+      <Link>SimpleQueryCache.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
