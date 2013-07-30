@@ -27,8 +27,9 @@ namespace DotQuery.Core
             List<Task<TResult>> taskList = aq.Queries.Cast<TQuery>().Select(m_dataProvider.QueryAsync).ToList(); //query all queries inside the Aggregated Query
             var queryList = aq.Queries.ToList();
 
-            //We could use Task.WhenAll() instead if we don't want 'OnSingleQueryFinished' event
-            Task<List<TResult>> taskParent = Task.Run(async () =>
+            //Could use Task.WhenAll() instead if we don't want 'OnSingleQueryFinished' event
+            //Could use Task.Run() here but for .net4 compatibility we go for Task.Factory.StartNew(async).Unwrap(). For more information, see http://blogs.msdn.com/b/pfxteam/archive/2011/10/24/10229468.aspx
+            Task<List<TResult>> taskParent = Task.Factory.StartNew(async () =>
             {
                 var results = new List<TResult>();
 
@@ -43,7 +44,11 @@ namespace DotQuery.Core
                 //wait all one by one pattern
                 while (taskList.Count > 0)
                 {
+#if portable
+                    Task<TResult> completedTask = await TaskEx.WhenAny(taskList);                    
+#else
                     Task<TResult> completedTask = await Task.WhenAny(taskList);
+#endif
                     int index = taskList.IndexOf(completedTask);
                     var query = queryList[index];
 
@@ -65,7 +70,7 @@ namespace DotQuery.Core
                 }
 
                 return results;
-            });
+            }).Unwrap();
 
             return taskParent;
         }

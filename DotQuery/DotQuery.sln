@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotQuery.Core", "DotQuery.Core\DotQuery.Core.csproj", "{5D61860B-F376-4B19-8DCA-F4BD890C161B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotQuery.Core.Portable", "DotQuery.Core.Portable\DotQuery.Core.Portable.csproj", "{160F3728-5C63-4724-B25C-D2CB3BA211A8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{5D61860B-F376-4B19-8DCA-F4BD890C161B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5D61860B-F376-4B19-8DCA-F4BD890C161B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5D61860B-F376-4B19-8DCA-F4BD890C161B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{160F3728-5C63-4724-B25C-D2CB3BA211A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{160F3728-5C63-4724-B25C-D2CB3BA211A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{160F3728-5C63-4724-B25C-D2CB3BA211A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{160F3728-5C63-4724-B25C-D2CB3BA211A8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
