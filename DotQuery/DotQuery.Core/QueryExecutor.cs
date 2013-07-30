@@ -8,27 +8,29 @@ using System.Threading.Tasks;
 namespace DotQuery.Core
 {
     /// <summary>
-    /// Query executor that goes through a cache (also uses async await)
+    /// Core abstract class of this library that gracefully handles all cache read/hit/write on given query.
+    /// All real query executor should inherit from this class and implement DoQueryAsync.
     /// </summary>
-    /// <typeparam name="TQuery"></typeparam>
-    /// <typeparam name="TResult"> </typeparam>
+    /// <typeparam name="TQuery">Type of the query object</typeparam>
+    /// <typeparam name="TResult">Result type</typeparam>
     public abstract class QueryExecutor<TQuery, TResult> where TQuery : QueryBase
     {
         private readonly IQueryCache m_queryCache;
 
+        /// <summary>
+        /// Protected constructor of the query executor
+        /// </summary>
+        /// <param name="queryCache"></param>
         protected QueryExecutor(IQueryCache queryCache)
         {
             m_queryCache = queryCache;
         }
-
-        public class QueryCacheException : Exception
-        {
-            public QueryCacheException(string msg)
-                : base(msg)
-            {
-            }
-        }
-
+        
+        /// <summary>
+        /// Execute the given query as an asynchronous operation.
+        /// </summary>
+        /// <param name="query">The query to be executed</param>
+        /// <returns>The task object representing the asynchronous operation</returns>
         public async Task<TResult> QueryAsync(TQuery query)
         {
             object cachedValue;
@@ -41,7 +43,7 @@ namespace DotQuery.Core
                     //todo: make this configurable
                     if (queryTask.IsFaulted || queryTask.IsCanceled)
                     {
-                        return await QueryAsyncWithoutCacheLookup(query).ConfigureAwait(false);
+                        return await QueryInternalAsync(query).ConfigureAwait(false);
                     }
 
                     //query is cached, just await the result
@@ -52,9 +54,9 @@ namespace DotQuery.Core
                 {
                     var cachedStream = cachedValue as Stream;
 
+                    //special treatment if the cached object is a stream
                     if (cachedStream != null)
                     {
-                        //special treatment if the cached object is a stream
                         if (cachedStream.CanSeek) //reusable, probably memory stream
                         {
                             cachedStream.Seek(0, SeekOrigin.Begin);
@@ -65,7 +67,7 @@ namespace DotQuery.Core
                             //The stream is probably used... Dispose it and query again...
                             //todo: make cache stream configurable
                             cachedStream.Dispose();
-                            return await QueryAsyncWithoutCacheLookup(query).ConfigureAwait(false);
+                            return await QueryInternalAsync(query).ConfigureAwait(false);
                         }
                     }
                     else
@@ -79,11 +81,14 @@ namespace DotQuery.Core
             }
             else
             {
-                return await QueryAsyncWithoutCacheLookup(query).ConfigureAwait(false);
+                return await QueryInternalAsync(query).ConfigureAwait(false);
             }
         }
 
-        protected async Task<TResult> QueryAsyncWithoutCacheLookup(TQuery query)
+        /// <summary>
+        /// Execute the query and update the cache when necessary
+        /// </summary>        
+        protected async Task<TResult> QueryInternalAsync(TQuery query)
         {
             Task<TResult> task = DoQueryAsync(query);
 
@@ -94,6 +99,25 @@ namespace DotQuery.Core
             return result;
         }
 
+        /// <summary>
+        /// Execute the query in the real world (without cache read/write)
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
         protected abstract Task<TResult> DoQueryAsync(TQuery query);
+    }
+
+    /// <summary>
+    /// Exception that representing invalid states inside query executor and its cache
+    /// </summary>
+    public class QueryCacheException : Exception
+    {
+        /// <summary>
+        /// Constructs a QueryCacheException
+        /// </summary>
+        public QueryCacheException(string msg)
+            : base(msg)
+        {
+        }
     }
 }

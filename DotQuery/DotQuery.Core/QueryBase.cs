@@ -7,17 +7,18 @@ using DotQuery.Core;
 
 namespace DotQuery.Core
 {
+    /// <summary>
+    /// The base class for any query object
+    /// </summary>
     public abstract class QueryBase : CacheKey
     {
-        protected QueryBase(int profileId, bool exportQuery = false)
+        protected QueryBase(bool exportQuery = false)
         {
-            this.ProfileId = profileId;
             this.ExportBinary = exportQuery;
             this.CreateTime = DateTime.Now;
             this.QueryOptions = QueryOptions.Default;
         }
 
-        public int ProfileId { get; private set; }
         public bool ExportBinary { get; protected set; }
 
         public QueryOptions QueryOptions { get; set; }

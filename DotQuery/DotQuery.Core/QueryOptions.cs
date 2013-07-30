@@ -5,6 +5,9 @@ using System.Text;
 
 namespace DotQuery.Core
 {
+    /// <summary>
+    /// Options to be set about how the underlying cache should do with the given query
+    /// </summary>
     [Flags]
     public enum QueryOptions
     {

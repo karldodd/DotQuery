@@ -6,14 +6,28 @@ using System.Threading.Tasks;
 
 namespace DotQuery.Core
 {
+    /// <summary>
+    /// The query executor which is able to fire a group of queries as a single composite query.
+    /// You can get back a list of results later.
+    /// </summary>
+    /// <remarks>
+    /// This class requires all child queries/results to be in the same type/shape
+    /// </remarks>
+    /// <typeparam name="TQuery">The type of a child query</typeparam>
+    /// <typeparam name="TResult">The result type of a child query</typeparam>
     public class AggregateQueryClientSideExecutor<TQuery, TResult> : QueryExecutor<AggregateQuery, List<TResult>> where TQuery : QueryBase
     {
-        private readonly QueryExecutor<TQuery, TResult> m_dataProvider;
+        private readonly QueryExecutor<TQuery, TResult> m_childQueryExecutor;
 
-        public AggregateQueryClientSideExecutor(QueryExecutor<TQuery, TResult> dataProvider, IQueryCache queryCache)
+        /// <summary>
+        /// Constructs an AggregateQueryClientSideExecutor
+        /// </summary>
+        /// <param name="chileQueryExecutor">The query executor to execute child queries</param>
+        /// <param name="queryCache">The query cache to be used</param>
+        public AggregateQueryClientSideExecutor(QueryExecutor<TQuery, TResult> chileQueryExecutor, IQueryCache queryCache)
             : base(queryCache)
         {
-            m_dataProvider = dataProvider;
+            m_childQueryExecutor = chileQueryExecutor;
         }
 
         protected override Task<List<TResult>> DoQueryAsync(AggregateQuery aq)
@@ -21,10 +35,10 @@ namespace DotQuery.Core
             if (aq.ExportBinary)
             {
                 //that should be done at server side
-                throw new NotSupportedException("This class only handles client-side query aggreation");
+                throw new NotSupportedException("AggregateQueryClientSideExecutor only handles client-side query aggreation");
             }
 
-            List<Task<TResult>> taskList = aq.Queries.Cast<TQuery>().Select(m_dataProvider.QueryAsync).ToList(); //query all queries inside the Aggregated Query
+            List<Task<TResult>> taskList = aq.Queries.Cast<TQuery>().Select(m_childQueryExecutor.QueryAsync).ToList(); //query all queries inside the Aggregated Query
             var queryList = aq.Queries.ToList();
 
             //Could use Task.WhenAll() instead if we don't want 'OnSingleQueryFinished' event
@@ -48,12 +62,12 @@ namespace DotQuery.Core
                     Task<TResult> completedTask = await Task.WhenAny(taskList);
 #endif
                     int index = taskList.IndexOf(completedTask);
-                    var query = queryList[index];
+                    QueryBase query = queryList[index];
 
                     if (completedTask.Exception == null)
                     {
                         TResult qr = completedTask.Result;
-                        aq.OnSingleQueryFinished(qr);
+                        aq.OnSingleQueryFinished(query, qr);
                         results[aq.Queries.IndexOf(query)] = qr; //put result into the correct postion (todo: ensure indexof is using reference equal there )
                     }
                     else
