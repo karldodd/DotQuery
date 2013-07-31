@@ -18,6 +18,10 @@
         <dependency id="DotQuery.Core" version="1.0.0" />
         <dependency id="Newtonsoft.Json" version="5.0.6" />        
       </group>
+      <group targetFramework="win8">
+        <dependency id="DotQuery.Core" version="1.0.0" />
+        <dependency id="Newtonsoft.Json" version="5.0.6" />
+      </group>
       <group targetFramework="net40">
         <dependency id="DotQuery.Core" version="1.0.0" />
         <dependency id="Newtonsoft.Json" version="5.0.6" />
@@ -40,6 +44,10 @@
     <file src="DotQuery.Extensions\bin\Release\DotQuery.Extensions.dll" target="lib\net45\DotQuery.Extensions.dll" />
     <file src="DotQuery.Extensions\bin\Release\DotQuery.Extensions.pdb" target="lib\net45\DotQuery.Extensions.pdb" />
     <file src="DotQuery.Extensions\bin\Release\DotQuery.Extensions.xml" target="lib\net45\DotQuery.Extensions.xml" />
+
+    <file src="DotQuery.Extensions.Win8\bin\Release\DotQuery.Extensions.dll" target="lib\win8\DotQuery.Extensions.dll" />
+    <file src="DotQuery.Extensions.Win8\bin\Release\DotQuery.Extensions.pdb" target="lib\win8\DotQuery.Extensions.pdb" />
+    <file src="DotQuery.Extensions.Win8\bin\Release\DotQuery.Extensions.xml" target="lib\win8\DotQuery.Extensions.xml" />
 
     <file src="DotQuery.Extensions.Net4\bin\Release\DotQuery.Extensions.dll" target="lib\net40\DotQuery.Extensions.dll" />
     <file src="DotQuery.Extensions.Net4\bin\Release\DotQuery.Extensions.pdb" target="lib\net40\DotQuery.Extensions.pdb" />

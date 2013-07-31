@@ -17,6 +17,9 @@
       <group targetFramework="net45">
         <dependency id="Newtonsoft.Json" version="5.0.6" />
       </group>
+      <group targetFramework="win8">
+        <dependency id="Newtonsoft.Json" version="5.0.6" />
+      </group>
       <group targetFramework="portable-win+net40+sl40+wp80">
         <dependency id="Newtonsoft.Json" version="5.0.6" />
         <dependency id="Microsoft.Bcl" version="1.0.19" />
@@ -30,6 +33,10 @@
     <file src="DotQuery.Core\bin\Release\DotQuery.Core.pdb" target="lib\net45\DotQuery.Core.pdb" />
     <file src="DotQuery.Core\bin\Release\DotQuery.Core.xml" target="lib\net45\DotQuery.Core.xml" />
 
+    <file src="DotQuery.Core.Win8\bin\Release\DotQuery.Core.dll" target="lib\win8\DotQuery.Core.dll" />
+    <file src="DotQuery.Core.Win8\bin\Release\DotQuery.Core.pdb" target="lib\win8\DotQuery.Core.pdb" />
+    <file src="DotQuery.Core.Win8\bin\Release\DotQuery.Core.xml" target="lib\win8\DotQuery.Core.xml" />
+                            
     <file src="DotQuery.Core.Portable\bin\Release\DotQuery.Core.dll" target="lib\portable-win+net40+sl40+wp80\DotQuery.Core.dll" />
     <file src="DotQuery.Core.Portable\bin\Release\DotQuery.Core.pdb" target="lib\portable-win+net40+sl40+wp80\DotQuery.Core.pdb" />
     <file src="DotQuery.Core.Portable\bin\Release\DotQuery.Core.xml" target="lib\portable-win+net40+sl40+wp80\DotQuery.Core.xml" />
