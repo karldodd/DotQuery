@@ -9,7 +9,7 @@
     <projectUrl>https://github.com/karldodd/DotQuery</projectUrl>
     <iconUrl>https://raw.github.com/karldodd/DotQuery/master/DotQuery/DotQueryIcon.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>A lightweight query result caching framework for .NET</description>
+    <description>Core libs of DotQuery, a lightweight query result caching framework for .NET</description>
     <releaseNotes>First release</releaseNotes>
     <copyright>Copyright 2013</copyright>
     <tags>dotquery query cache result async portable</tags> 

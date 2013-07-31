@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nuget", "Nuget", "{531E5D07-2C45-44F8-BE1B-0B6C3F43BB26}"
 	ProjectSection(SolutionItems) = preProject
 		DotQuery.Core.nuspec = DotQuery.Core.nuspec
+		DotQuery.Extensions.nuspec = DotQuery.Extensions.nuspec
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotQuery.Core.Test", "DotQuery.Core.Test\DotQuery.Core.Test.csproj", "{E89AA03D-C960-4D33-8A86-3BE8EB1B380F}"
