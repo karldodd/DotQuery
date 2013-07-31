@@ -50,7 +50,8 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Stub\DummyQuery.cs" />
+    <Compile Include="Stub\AddQuery.cs" />
+    <Compile Include="Stub\AddQueryExecutor.cs" />
     <Compile Include="TestQueryExecutor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

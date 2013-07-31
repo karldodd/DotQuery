@@ -10,8 +10,7 @@ namespace DotQuery.Core
     /// A simple but working in-memory cache (backed by Dictionary<T,V>)
     /// </summary>
     /// <remarks>
-    /// Performance tip: Use hashtable at this moment. 
-    /// If string key is very long, probably the better approach is to use a prefix tree. (saves much more memory and avoid hashcode calculating)
+    /// This query cache implementation is not thread safe!
     /// </remarks>
     public class SimpleQueryCache : IQueryCache
     {

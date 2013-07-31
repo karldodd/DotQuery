@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace DotQuery.Core.Test.Stub
 {
-    public class DummyQuery : QueryBase
+    public class AddQuery : QueryBase
     {
-        
+        public int Left { get; set; }
+        public int Right { get; set; }
     }
 }
