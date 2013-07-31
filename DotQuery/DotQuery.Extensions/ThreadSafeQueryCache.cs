@@ -1,24 +1,26 @@
-﻿using System;
+﻿using DotQuery.Core;
+using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DotQuery.Core
+namespace DotQuery.Extensions
 {
     /// <summary>
     /// A simple but working in-memory cache (backed by Dictionary<T,V>)
     /// </summary>
     /// <remarks>
-    /// This query cache implementation is not thread safe.
+    /// This query cache implementation is not thread safe!
     /// </remarks>
-    public class SimpleQueryCache : IQueryCache
+    public class ThreadSafeQueryCache : IQueryCache
     {
-        private readonly Dictionary<CacheKey, object> m_dictionary;
+        private readonly ConcurrentDictionary<CacheKey, object> m_dictionary;
 
-        public SimpleQueryCache(IEqualityComparer<CacheKey> keyComparer)
+        public ThreadSafeQueryCache(IEqualityComparer<CacheKey> keyComparer)
         {
-            m_dictionary = new Dictionary<CacheKey, object>(keyComparer);
+            m_dictionary = new ConcurrentDictionary<CacheKey, object>(keyComparer);
         }
 
         public bool TryGetFromCache(CacheKey key, out object value)
