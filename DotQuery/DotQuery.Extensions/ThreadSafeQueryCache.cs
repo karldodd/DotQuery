@@ -37,5 +37,10 @@ namespace DotQuery.Extensions
         {
             m_dictionary.Clear();
         }
+
+        public void Clear()
+        {
+            m_dictionary.Clear();
+        }
     }
 }

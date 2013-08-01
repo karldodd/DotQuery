@@ -42,5 +42,10 @@ namespace DotQuery.Extensions
         {
             m_objectCache.Trim(75);
         }
+
+        public void Clear()
+        {
+            m_objectCache.Trim(100);
+        }
     }
 }
