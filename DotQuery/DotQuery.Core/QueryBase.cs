@@ -21,6 +21,7 @@ namespace DotQuery.Core
 
         public bool ExportBinary { get; protected set; }
 
+        [JsonIgnore]
         public QueryOptions QueryOptions { get; set; }
 
         /// <summary>
