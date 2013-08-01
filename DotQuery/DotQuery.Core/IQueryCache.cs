@@ -11,5 +11,6 @@ namespace DotQuery.Core
         bool TryGetFromCache(CacheKey key, out object value);
         void CacheValue(CacheKey key, object value);
         void Trim();
+        void Clear();
     }
 }

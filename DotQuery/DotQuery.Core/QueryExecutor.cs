@@ -40,8 +40,7 @@ namespace DotQuery.Core
                 if (queryTask != null)
                 {
                     //re-query if the task is canceld or failed.
-                    //todo: make this configurable
-                    if (queryTask.IsFaulted || queryTask.IsCanceled)
+                    if ((queryTask.IsFaulted || queryTask.IsCanceled) && query.QueryOptions.HasFlag(QueryOptions.ReQueryWhenErrorCached))
                     {
                         return await QueryInternalAsync(query).ConfigureAwait(false);
                     }
@@ -92,7 +91,7 @@ namespace DotQuery.Core
         {
             Task<TResult> task = DoQueryAsync(query);
 
-            bool cacheResult = query.QueryOptions.HasFlag(QueryOptions.CacheResult);
+            bool cacheResult = query.QueryOptions.HasFlag(QueryOptions.SaveToCache);
             if (cacheResult) m_queryCache.CacheValue(query, task); //cache the task
             TResult result = await task.ConfigureAwait(false);
             if (cacheResult) m_queryCache.CacheValue(query, result); //cache the result

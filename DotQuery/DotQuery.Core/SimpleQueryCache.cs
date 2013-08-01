@@ -35,5 +35,10 @@ namespace DotQuery.Core
         {
             m_dictionary.Clear();
         }
+
+        public void Clear()
+        {
+            m_dictionary.Clear();
+        }
     }
 }

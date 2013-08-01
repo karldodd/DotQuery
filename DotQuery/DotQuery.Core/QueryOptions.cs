@@ -11,9 +11,29 @@ namespace DotQuery.Core
     [Flags]
     public enum QueryOptions
     {
+        /// <summary>
+        /// The query does nothing related to the cache (raw execution every time)
+        /// </summary>
         None = 0,
+
+        /// <summary>
+        /// Look up the cache to see if the query's result/task is already there
+        /// </summary>
         LookupCache = 1,
-        CacheResult = 2,
-        Default = LookupCache + CacheResult
+
+        /// <summary>
+        /// Save result/task to the cache when the query has been executed or is being executed
+        /// </summary>
+        SaveToCache = 2,
+
+        /// <summary>
+        /// The query should be executed again if the cache contains a failed task
+        /// </summary>
+        ReQueryWhenErrorCached = 4,
+
+        /// <summary>
+        /// The default smart behavior: the query will lookup and save to cache, and re-execute the query if error is cached
+        /// </summary>
+        Default = LookupCache + SaveToCache + ReQueryWhenErrorCached
     }
 }
