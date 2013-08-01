@@ -113,10 +113,12 @@
     <Compile Include="..\DotQuery.Extensions\Http\WebApiQueryExecutorBase.cs">
       <Link>Http\WebApiQueryExecutorBase.cs</Link>
     </Compile>
+    <Compile Include="..\DotQuery.Extensions\Properties\AssemblyInfo.cs">
+      <Link>Properties\AssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="..\DotQuery.Extensions\ThreadSafeQueryCache.cs">
       <Link>ThreadSafeQueryCache.cs</Link>
     </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json">
@@ -126,6 +128,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>
   </PropertyGroup>
