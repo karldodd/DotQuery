@@ -59,5 +59,39 @@ namespace DotQuery.Core.Test
                 >=
                 m_delayTime);  //well, should not hit
         }
+
+        [TestMethod]
+        public void TestQueryOptions2()
+        {
+            var q1 = new AddQuery { Left = 1, Right = 2 };
+            var q2 = new AddQuery { Left = 1, Right = 2, QueryOptions = QueryOptions.CacheResult };
+
+            Assert.IsTrue(
+                TimeCost(async () => { Assert.AreEqual(3, await m_exec.QueryAsync(q1)); })
+                >=
+                m_delayTime);
+
+            Assert.IsTrue(
+                TimeCost(async () => { Assert.AreEqual(3, await m_exec.QueryAsync(q2)); })
+                >=
+                m_delayTime);  //well, should not hit
+        }
+
+        [TestMethod]
+        public void TestQueryOptions3()
+        {
+            var q1 = new AddQuery { Left = 1, Right = 2, QueryOptions = QueryOptions.CacheResult };
+            var q2 = new AddQuery { Left = 1, Right = 2 };
+
+            Assert.IsTrue(
+                TimeCost(async () => { Assert.AreEqual(3, await m_exec.QueryAsync(q1)); })
+                >=
+                m_delayTime);
+
+            Assert.IsTrue(
+                TimeCost(async () => { Assert.AreEqual(3, await m_exec.QueryAsync(q2)); })
+                <=
+                TimeSpan.FromMilliseconds(10));  //well, a cache hit
+        }
     }
 }
