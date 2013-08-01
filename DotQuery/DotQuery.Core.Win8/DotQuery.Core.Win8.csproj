@@ -118,6 +118,9 @@
     <Compile Include="..\DotQuery.Core\IQueryProducer.cs">
       <Link>IQueryProducer.cs</Link>
     </Compile>
+    <Compile Include="..\DotQuery.Core\Properties\AssemblyInfo.cs">
+      <Link>Properties\AssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="..\DotQuery.Core\QueryBase.cs">
       <Link>QueryBase.cs</Link>
     </Compile>
@@ -130,7 +133,6 @@
     <Compile Include="..\DotQuery.Core\SimpleQueryCache.cs">
       <Link>SimpleQueryCache.cs</Link>
     </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json">
@@ -140,6 +142,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>
   </PropertyGroup>

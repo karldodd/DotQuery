@@ -53,6 +53,9 @@
     <Compile Include="..\DotQuery.Core\IQueryProducer.cs">
       <Link>IQueryProducer.cs</Link>
     </Compile>
+    <Compile Include="..\DotQuery.Core\Properties\AssemblyInfo.cs">
+      <Link>Properties\AssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="..\DotQuery.Core\QueryBase.cs">
       <Link>QueryBase.cs</Link>
     </Compile>
@@ -65,7 +68,6 @@
     <Compile Include="..\DotQuery.Core\SimpleQueryCache.cs">
       <Link>SimpleQueryCache.cs</Link>
     </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Threading.Tasks">
@@ -88,6 +90,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.8\tools\Microsoft.Bcl.Build.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
