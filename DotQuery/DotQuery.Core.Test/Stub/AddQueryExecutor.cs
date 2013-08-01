@@ -17,8 +17,14 @@ namespace DotQuery.Core.Test.Stub
 
         protected override async Task<int> DoQueryAsync(AddQuery query)
         {
+            RealCalcCount++;
             await Task.Delay(m_delayTime);
-            return query.Left + query.Right;
+            checked
+            {
+                return query.Left + query.Right;
+            }
         }
+
+        public int RealCalcCount { get; set; }
     }
 }

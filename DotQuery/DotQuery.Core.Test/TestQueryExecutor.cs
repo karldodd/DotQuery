@@ -19,10 +19,30 @@ namespace DotQuery.Core.Test
             return sw.Elapsed;
         }
 
+        private static bool TryCatchException<TException>(Action a) where TException : Exception
+        {
+            try
+            {
+                a();
+            }
+            catch (AggregateException e)
+            {
+                if (e.InnerException is TException)
+                {
+                    return true;
+                }
+            }
+            catch (TException)
+            {
+                return true;
+            }
+            return false;
+        }
+
         [TestInitialize]
         public void Init()
         {
-            m_delayTime = TimeSpan.FromSeconds(1);
+            m_delayTime = TimeSpan.FromMilliseconds(200);
             m_exec = new AddQueryExecutor(m_delayTime);
         }
 
@@ -64,7 +84,7 @@ namespace DotQuery.Core.Test
         public void TestQueryOptions2()
         {
             var q1 = new AddQuery { Left = 1, Right = 2 };
-            var q2 = new AddQuery { Left = 1, Right = 2, QueryOptions = QueryOptions.CacheResult };
+            var q2 = new AddQuery { Left = 1, Right = 2, QueryOptions = QueryOptions.SaveToCache };
 
             Assert.IsTrue(
                 TimeCost(async () => { Assert.AreEqual(3, await m_exec.QueryAsync(q1)); })
@@ -80,7 +100,7 @@ namespace DotQuery.Core.Test
         [TestMethod]
         public void TestQueryOptions3()
         {
-            var q1 = new AddQuery { Left = 1, Right = 2, QueryOptions = QueryOptions.CacheResult };
+            var q1 = new AddQuery { Left = 1, Right = 2, QueryOptions = QueryOptions.SaveToCache };
             var q2 = new AddQuery { Left = 1, Right = 2 };
 
             Assert.IsTrue(
@@ -92,6 +112,32 @@ namespace DotQuery.Core.Test
                 TimeCost(async () => { Assert.AreEqual(3, await m_exec.QueryAsync(q2)); })
                 <=
                 TimeSpan.FromMilliseconds(10));  //well, a cache hit
+        }
+
+        [TestMethod]
+        public void TestQueryOptions4()
+        {
+            var q1 = new AddQuery { Left = int.MaxValue, Right = int.MaxValue };
+            var q2 = new AddQuery { Left = int.MaxValue, Right = int.MaxValue };
+
+            Assert.IsTrue(TryCatchException<OverflowException>(() => TimeCost(async () => { await m_exec.QueryAsync(q1); })));
+            Assert.IsTrue(TryCatchException<OverflowException>(() => TimeCost(async () => { await m_exec.QueryAsync(q2); })));
+
+            Assert.AreEqual(2, ((AddQueryExecutor)m_exec).RealCalcCount);
+        }
+
+        [TestMethod]
+        public void TestQueryOptions5()
+        {
+            var q1 = new AddQuery { Left = int.MaxValue, Right = int.MaxValue };
+
+            //use cached failed task
+            var q2 = new AddQuery { Left = int.MaxValue, Right = int.MaxValue, QueryOptions = (QueryOptions) (QueryOptions.Default - QueryOptions.ReQueryWhenErrorCached) };
+
+            Assert.IsTrue(TryCatchException<OverflowException>(() => TimeCost(async () => { await m_exec.QueryAsync(q1); })));
+            Assert.IsTrue(TryCatchException<OverflowException>(() => TimeCost(async () => { await m_exec.QueryAsync(q2); })));
+
+            Assert.AreEqual(1, ((AddQueryExecutor)m_exec).RealCalcCount);
         }
     }
 }
