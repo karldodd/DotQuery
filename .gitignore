@@ -82,7 +82,9 @@ publish
 *.Publish.xml
 
 # NuGet Packages Directory
-packages
+/DotQuery/packages/*
+!/DotQuery/packages/repositories.config
+!/DotQuery/packages/Microsoft.Bcl.Build.1.0.8
 
 # Windows Azure Build Output
 csx
