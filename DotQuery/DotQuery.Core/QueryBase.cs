@@ -10,7 +10,7 @@ namespace DotQuery.Core
     /// <summary>
     /// The base class for any query object
     /// </summary>
-    public abstract class QueryBase : CacheKey
+    public abstract class QueryBase
     {
         protected QueryBase(bool exportQuery = false)
         {
@@ -37,5 +37,10 @@ namespace DotQuery.Core
         /// (2) explicit difference between two queries
         /// </summary>
         public string DisplayName { get; set; }
+
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
     }
 }

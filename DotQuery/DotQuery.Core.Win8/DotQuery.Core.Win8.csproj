@@ -115,9 +115,6 @@
     <Compile Include="..\DotQuery.Core\AsyncQueryExecutor.cs">
       <Link>AsyncQueryExecutor.cs</Link>
     </Compile>
-    <Compile Include="..\DotQuery.Core\CacheKey.cs">
-      <Link>CacheKey.cs</Link>
-    </Compile>
     <Compile Include="..\DotQuery.Core\DefaultQueryEqualityComparer.cs">
       <Link>DefaultQueryEqualityComparer.cs</Link>
     </Compile>

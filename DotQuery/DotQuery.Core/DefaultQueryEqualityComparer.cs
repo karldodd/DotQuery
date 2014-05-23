@@ -9,16 +9,16 @@ namespace DotQuery.Core
     /// <summary>
     /// To override default GetHashCode and Equals
     /// </summary>
-    public class DefaultQueryEqualityComparer : IEqualityComparer<CacheKey>
+    public class DefaultQueryEqualityComparer : IEqualityComparer<QueryBase>
     {
-        public bool Equals(CacheKey x, CacheKey y)
+        public bool Equals(QueryBase x, QueryBase y)
         {
-            return x.StringKey == y.StringKey;
+            return x.ToString() == y.ToString();
         }
 
-        public int GetHashCode(CacheKey obj)
+        public int GetHashCode(QueryBase obj)
         {
-            return obj.StringKey.GetHashCode();
+            return obj.ToString().GetHashCode();
         }
     }
 }

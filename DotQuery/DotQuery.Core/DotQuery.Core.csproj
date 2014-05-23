@@ -49,7 +49,6 @@
     <Compile Include="AggregateQuery.cs" />
     <Compile Include="AggregateAsyncQueryClientSideExecutor.cs" />
     <Compile Include="AsyncLazy.cs" />
-    <Compile Include="CacheKey.cs" />
     <Compile Include="DefaultQueryEqualityComparer.cs" />
     <Compile Include="IQueryProducer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

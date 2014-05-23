@@ -8,36 +8,14 @@ using System.Threading.Tasks;
 
 namespace DotQuery.Extensions
 {
-    public class MemoryCacheBasedQueryCache<TValue> : IAsyncQueryCache<CacheKey, TValue>
+    public class MemoryCacheBasedQueryCache<TKey, TValue> : IAsyncQueryCache<TKey, TValue>
     {
         private MemoryCache m_objectCache = MemoryCache.Default;
 
         public MemoryCacheBasedQueryCache()
         {
         }
-
-        public bool TryGet(CacheKey key, out object value)
-        {
-            object cached = m_objectCache.Get(key.StringKey);
-
-            if (cached == null)
-            {
-                value = null;
-                return false;
-            }
-            else
-            {
-                value = cached;
-                return true;
-            }
-        }
-
-        public void Set(CacheKey key, object value)
-        {
-            m_objectCache.Set(new CacheItem(key.StringKey, value), new CacheItemPolicy() { SlidingExpiration = TimeSpan.FromHours(2) });
-            m_objectCache[key.StringKey] = value;
-        }
-
+        
         public void Trim()
         {
             m_objectCache.Trim(75);
@@ -48,15 +26,15 @@ namespace DotQuery.Extensions
             m_objectCache.Trim(100);
         }
 
-        public AsyncLazy<TValue> GetOrAdd(CacheKey key, AsyncLazy<TValue> lazyTask)
+        public AsyncLazy<TValue> GetOrAdd(TKey key, AsyncLazy<TValue> lazyTask)
         {
-            var existing = m_objectCache.AddOrGetExisting(new CacheItem(key.StringKey, lazyTask), new CacheItemPolicy() { SlidingExpiration = TimeSpan.FromHours(2) });
+            var existing = m_objectCache.AddOrGetExisting(new CacheItem(key.ToString(), lazyTask), new CacheItemPolicy() { SlidingExpiration = TimeSpan.FromHours(2) });
             return existing == null ? lazyTask : (AsyncLazy<TValue>)existing.Value;
         }
 
-        public bool TryGet(CacheKey key, out AsyncLazy<TValue> value)
+        public bool TryGet(TKey key, out AsyncLazy<TValue> value)
         {
-            object cached = m_objectCache.Get(key.StringKey);
+            object cached = m_objectCache.Get(key.ToString());
 
             if (cached == null)
             {
@@ -70,10 +48,11 @@ namespace DotQuery.Extensions
             }
         }
 
-        public void Set(CacheKey key, AsyncLazy<TValue> value)
+        public void Set(TKey key, AsyncLazy<TValue> value)
         {
-            m_objectCache.Set(new CacheItem(key.StringKey, value), new CacheItemPolicy() { SlidingExpiration = TimeSpan.FromHours(2) });
-            m_objectCache[key.StringKey] = value;
+            m_objectCache.Set(new CacheItem(key.ToString(), value), new CacheItemPolicy() { SlidingExpiration = TimeSpan.FromHours(2) });
+            m_objectCache[key.ToString()] = value;
         }
+
     }
 }
