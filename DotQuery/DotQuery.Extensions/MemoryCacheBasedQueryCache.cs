@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DotQuery.Extensions
 {
-    public class MemoryCacheBasedQueryCache : IQueryCache<CacheKey>
+    public class MemoryCacheBasedQueryCache<TValue> : IAsyncQueryCache<CacheKey, TValue>
     {
         private MemoryCache m_objectCache = MemoryCache.Default;
 
@@ -16,7 +16,7 @@ namespace DotQuery.Extensions
         {
         }
 
-        public bool TryGetFromCache(CacheKey key, out object value)
+        public bool TryGet(CacheKey key, out object value)
         {
             object cached = m_objectCache.Get(key.StringKey);
 
@@ -32,7 +32,7 @@ namespace DotQuery.Extensions
             }
         }
 
-        public void CacheValue(CacheKey key, object value)
+        public void Set(CacheKey key, object value)
         {
             m_objectCache.Set(new CacheItem(key.StringKey, value), new CacheItemPolicy() { SlidingExpiration = TimeSpan.FromHours(2) });
             m_objectCache[key.StringKey] = value;
@@ -46,6 +46,34 @@ namespace DotQuery.Extensions
         public void Clear()
         {
             m_objectCache.Trim(100);
+        }
+
+        public AsyncLazy<TValue> GetOrAdd(CacheKey key, AsyncLazy<TValue> lazyTask)
+        {
+            var existing = m_objectCache.AddOrGetExisting(new CacheItem(key.StringKey, lazyTask), new CacheItemPolicy() { SlidingExpiration = TimeSpan.FromHours(2) });
+            return existing == null ? lazyTask : (AsyncLazy<TValue>)existing.Value;
+        }
+
+        public bool TryGet(CacheKey key, out AsyncLazy<TValue> value)
+        {
+            object cached = m_objectCache.Get(key.StringKey);
+
+            if (cached == null)
+            {
+                value = null;
+                return false;
+            }
+            else
+            {
+                value = (AsyncLazy<TValue>)cached;
+                return true;
+            }
+        }
+
+        public void Set(CacheKey key, AsyncLazy<TValue> value)
+        {
+            m_objectCache.Set(new CacheItem(key.StringKey, value), new CacheItemPolicy() { SlidingExpiration = TimeSpan.FromHours(2) });
+            m_objectCache[key.StringKey] = value;
         }
     }
 }

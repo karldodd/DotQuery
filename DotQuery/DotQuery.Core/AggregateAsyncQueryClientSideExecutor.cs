@@ -15,19 +15,19 @@ namespace DotQuery.Core
     /// </remarks>
     /// <typeparam name="TQuery">The type of a child query</typeparam>
     /// <typeparam name="TResult">The result type of a child query</typeparam>
-    public class AggregateQueryClientSideExecutor<TQuery, TResult> : QueryExecutor<AggregateQuery, List<TResult>> 
+    public class AggregateAsyncQueryClientSideExecutor<TQuery, TResult> : AsyncQueryExecutor<AggregateQuery, List<TResult>> 
     {
-        private readonly QueryExecutor<TQuery, TResult> m_childQueryExecutor;
+        private readonly AsyncQueryExecutor<TQuery, TResult> _mChildAsyncQueryExecutor;
 
         /// <summary>
         /// Constructs an AggregateQueryClientSideExecutor
         /// </summary>
-        /// <param name="childQueryExecutor">The query executor to execute child queries</param>
+        /// <param name="childAsyncQueryExecutor query executor to execute child queries</param>
         /// <param name="queryCache">The query cache to be used</param>
-        public AggregateQueryClientSideExecutor(QueryExecutor<TQuery, TResult> childQueryExecutor, IQueryCache<AggregateQuery> queryCache)
+        public AggregateAsyncQueryClientSideExecutor(AsyncQueryExecutor<TQuery, TResult> childAsyncQueryExecutor, IAsyncQueryCache<AggregateQuery, List<TResult>> queryCache)
             : base(queryCache)
         {
-            m_childQueryExecutor = childQueryExecutor;
+            _mChildAsyncQueryExecutor = childAsyncQueryExecutor;
         }
 
         protected override Task<List<TResult>> DoQueryAsync(AggregateQuery aq)
@@ -38,7 +38,7 @@ namespace DotQuery.Core
                 throw new NotSupportedException("AggregateQueryClientSideExecutor only handles client-side query aggreation");
             }
 
-            List<Task<TResult>> taskList = aq.Queries.Cast<TQuery>().Select(childQ => m_childQueryExecutor.QueryAsync(childQ, aq.QueryOptions)).ToList(); //query all queries inside the Aggregated Query
+            List<Task<TResult>> taskList = aq.Queries.Cast<TQuery>().Select(childQ => _mChildAsyncQueryExecutor.QueryAsync(childQ, aq.QueryOptions)).ToList(); //query all queries inside the Aggregated Query
             var queryList = aq.Queries.ToList();
 
             //Could use Task.WhenAll() instead if we don't want 'OnSingleQueryFinished' event

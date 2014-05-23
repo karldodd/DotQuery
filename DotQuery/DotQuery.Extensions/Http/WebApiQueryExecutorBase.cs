@@ -10,12 +10,12 @@ using DotQuery.Extensions.Http;
 
 namespace DotQuery.Extensions.Http
 {
-    public abstract class WebApiQueryExecutorBase<TQuery, TResult> : QueryExecutor<TQuery, TResult> where TQuery : QueryBase
+    public abstract class WebApiQueryExecutorBase<TQuery, TResult> : AsyncQueryExecutor<TQuery, TResult> where TQuery : QueryBase
     {
         protected readonly WebApiClient m_webApiClient;
         protected readonly string m_apiPath;
 
-        protected WebApiQueryExecutorBase(WebApiClient webApiClient, IQueryCache<TQuery> queryCache, string apiPath) : base(queryCache)
+        protected WebApiQueryExecutorBase(WebApiClient webApiClient, IAsyncQueryCache<TQuery, TResult> queryCache, string apiPath) : base(queryCache)
         {
             m_webApiClient = webApiClient;
             m_apiPath = apiPath;

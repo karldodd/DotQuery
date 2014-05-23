@@ -9,26 +9,23 @@ using System.Threading.Tasks;
 namespace DotQuery.Extensions
 {
     /// <summary>
-    /// A simple but working in-memory cache (backed by Dictionary<T,V>)
+    /// A simple but working in-memory cache (backed by ConcurrentDictionary<TKey,V>)
     /// </summary>
-    /// <remarks>
-    /// This query cache implementation is not thread safe!
-    /// </remarks>
-    public class ThreadSafeQueryCache : IQueryCache<CacheKey>
+    public class ThreadSafeQueryCache<TKey, TResult> : IAsyncQueryCache<TKey, TResult>
     {
-        private readonly ConcurrentDictionary<CacheKey, object> m_dictionary;
+        private readonly ConcurrentDictionary<TKey, AsyncLazy<TResult>> m_dictionary;
 
-        public ThreadSafeQueryCache(IEqualityComparer<CacheKey> keyComparer)
+        public ThreadSafeQueryCache(IEqualityComparer<TKey> keyComparer)
         {
-            m_dictionary = new ConcurrentDictionary<CacheKey, object>(keyComparer);
+            m_dictionary = new ConcurrentDictionary<TKey, AsyncLazy<TResult>>(keyComparer);
         }
 
-        public bool TryGetFromCache(CacheKey key, out object value)
+        public bool TryGet(TKey key, out AsyncLazy<TResult> value)
         {
             return m_dictionary.TryGetValue(key, out value);
         }
 
-        public void CacheValue(CacheKey key, object value)
+        public void Set(TKey key, AsyncLazy<TResult> value)
         {
             m_dictionary[key] = value;
         }
@@ -41,6 +38,11 @@ namespace DotQuery.Extensions
         public void Clear()
         {
             m_dictionary.Clear();
+        }
+
+        public AsyncLazy<TResult> GetOrAdd(TKey key, AsyncLazy<TResult> lazyTask)
+        {
+            return m_dictionary.GetOrAdd(key, lazyTask);
         }
     }
 }

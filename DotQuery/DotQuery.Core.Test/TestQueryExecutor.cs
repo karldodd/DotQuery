@@ -10,7 +10,7 @@ namespace DotQuery.Core.Test
     public class TestQueryExecutor
     {
         private TimeSpan m_delayTime;
-        private QueryExecutor<AddQuery, int> m_exec;
+        private AsyncQueryExecutor<AddQuery, int> m_exec;
 
         private static TimeSpan TimeCost(Func<Task> a)
         {
@@ -43,7 +43,7 @@ namespace DotQuery.Core.Test
         public void Init()
         {
             m_delayTime = TimeSpan.FromMilliseconds(200);
-            m_exec = new AddQueryExecutor(m_delayTime);
+            m_exec = new AddAsyncQueryExecutor(m_delayTime);
         }
 
         [TestMethod]
@@ -106,12 +106,12 @@ namespace DotQuery.Core.Test
             Assert.IsTrue(
                 TimeCost(async () => { Assert.AreEqual(3, await m_exec.QueryAsync(q1)); })
                 >=
-                m_delayTime);
+                m_delayTime, "Should take longer");
 
             Assert.IsTrue(
                 TimeCost(async () => { Assert.AreEqual(3, await m_exec.QueryAsync(q2)); })
                 <=
-                TimeSpan.FromMilliseconds(10));  //well, a cache hit
+                TimeSpan.FromMilliseconds(10), "Should hit cache");  //well, a cache hit
         }
 
         [TestMethod]
@@ -123,7 +123,7 @@ namespace DotQuery.Core.Test
             Assert.IsTrue(TryCatchException<OverflowException>(() => TimeCost(async () => { await m_exec.QueryAsync(q1); })));
             Assert.IsTrue(TryCatchException<OverflowException>(() => TimeCost(async () => { await m_exec.QueryAsync(q2); })));
 
-            Assert.AreEqual(2, ((AddQueryExecutor)m_exec).RealCalcCount);
+            Assert.AreEqual(2, ((AddAsyncQueryExecutor)m_exec).RealCalcCount);
         }
 
         [TestMethod]
@@ -137,7 +137,7 @@ namespace DotQuery.Core.Test
             Assert.IsTrue(TryCatchException<OverflowException>(() => TimeCost(async () => { await m_exec.QueryAsync(q1); })));
             Assert.IsTrue(TryCatchException<OverflowException>(() => TimeCost(async () => { await m_exec.QueryAsync(q2); })));
 
-            Assert.AreEqual(1, ((AddQueryExecutor)m_exec).RealCalcCount);
+            Assert.AreEqual(1, ((AddAsyncQueryExecutor)m_exec).RealCalcCount);
         }
     }
 }

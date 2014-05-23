@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace DotQuery.Core.Test.Stub
 {
-    public class AddQueryExecutor : QueryExecutor<AddQuery, int>
+    public class AddAsyncQueryExecutor : AsyncQueryExecutor<AddQuery, int>
     {
         private readonly TimeSpan m_delayTime;
 
-        public AddQueryExecutor(TimeSpan delayTime) : base(new SimpleQueryCache<AddQuery>(new DefaultQueryEqualityComparer()))
+        public AddAsyncQueryExecutor(TimeSpan delayTime) : base(new SimpleQueryCache<AddQuery, int>(new DefaultQueryEqualityComparer()))
         {
             m_delayTime = delayTime;
         }

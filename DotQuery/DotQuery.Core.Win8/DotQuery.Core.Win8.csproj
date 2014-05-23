@@ -103,11 +103,17 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\DotQuery.Core\AggregateAsyncQueryClientSideExecutor.cs">
+      <Link>AggregateAsyncQueryClientSideExecutor.cs</Link>
+    </Compile>
     <Compile Include="..\DotQuery.Core\AggregateQuery.cs">
       <Link>AggregateQuery.cs</Link>
     </Compile>
-    <Compile Include="..\DotQuery.Core\AggregateQueryClientSideExecutor.cs">
-      <Link>AggregateQueryClientSideExecutor.cs</Link>
+    <Compile Include="..\DotQuery.Core\AsyncLazy.cs">
+      <Link>AsyncLazy.cs</Link>
+    </Compile>
+    <Compile Include="..\DotQuery.Core\AsyncQueryExecutor.cs">
+      <Link>AsyncQueryExecutor.cs</Link>
     </Compile>
     <Compile Include="..\DotQuery.Core\CacheKey.cs">
       <Link>CacheKey.cs</Link>
@@ -115,8 +121,8 @@
     <Compile Include="..\DotQuery.Core\DefaultQueryEqualityComparer.cs">
       <Link>DefaultQueryEqualityComparer.cs</Link>
     </Compile>
-    <Compile Include="..\DotQuery.Core\IQueryCache.cs">
-      <Link>IQueryCache.cs</Link>
+    <Compile Include="..\DotQuery.Core\IAsyncQueryCache.cs">
+      <Link>IAsyncQueryCache.cs</Link>
     </Compile>
     <Compile Include="..\DotQuery.Core\IQueryProducer.cs">
       <Link>IQueryProducer.cs</Link>
@@ -126,9 +132,6 @@
     </Compile>
     <Compile Include="..\DotQuery.Core\QueryBase.cs">
       <Link>QueryBase.cs</Link>
-    </Compile>
-    <Compile Include="..\DotQuery.Core\QueryExecutor.cs">
-      <Link>QueryExecutor.cs</Link>
     </Compile>
     <Compile Include="..\DotQuery.Core\QueryOptions.cs">
       <Link>QueryOptions.cs</Link>
