@@ -15,7 +15,7 @@ namespace DotQuery.Extensions.Http
         protected readonly WebApiClient m_webApiClient;
         protected readonly string m_apiPath;
 
-        protected WebApiQueryExecutorBase(WebApiClient webApiClient, IQueryCache queryCache, string apiPath) : base(queryCache)
+        protected WebApiQueryExecutorBase(WebApiClient webApiClient, IQueryCache<TQuery> queryCache, string apiPath) : base(queryCache)
         {
             m_webApiClient = webApiClient;
             m_apiPath = apiPath;

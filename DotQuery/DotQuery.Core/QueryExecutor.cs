@@ -13,36 +13,54 @@ namespace DotQuery.Core
     /// </summary>
     /// <typeparam name="TQuery">Type of the query object</typeparam>
     /// <typeparam name="TResult">Result type</typeparam>
-    public abstract class QueryExecutor<TQuery, TResult> where TQuery : QueryBase
+    public abstract class QueryExecutor<TQuery, TResult>
     {
-        private readonly IQueryCache m_queryCache;
+        private readonly IQueryCache<TQuery> m_queryCache;
 
         /// <summary>
         /// Protected constructor of the query executor
         /// </summary>
         /// <param name="queryCache"></param>
-        protected QueryExecutor(IQueryCache queryCache)
+        protected QueryExecutor(IQueryCache<TQuery> queryCache)
         {
             m_queryCache = queryCache;
         }
-        
+
         /// <summary>
         /// Execute the given query as an asynchronous operation.
         /// </summary>
         /// <param name="query">The query to be executed</param>
         /// <returns>The task object representing the asynchronous operation</returns>
-        public async Task<TResult> QueryAsync(TQuery query)
+        public Task<TResult> QueryAsync(TQuery query)
+        {
+            var typedQuery = query as QueryBase;
+
+            if (typedQuery != null)
+            {
+                return this.QueryAsync(query, typedQuery.QueryOptions);
+            }
+
+            return this.QueryAsync(query, QueryOptions.Default);
+        }
+
+        /// <summary>
+        /// Execute the given query as an asynchronous operation.
+        /// </summary>
+        /// <param name="query">The query to be executed</param>
+        /// <param name="queryOptions">Query options to use for this query</param>
+        /// <returns>The task object representing the asynchronous operation</returns>
+        public async Task<TResult> QueryAsync(TQuery query, QueryOptions queryOptions)
         {
             object cachedValue;
-            if (query.QueryOptions.HasFlag(QueryOptions.LookupCache) && m_queryCache.TryGetFromCache(query, out cachedValue))
+            if (queryOptions.HasFlag(QueryOptions.LookupCache) && m_queryCache.TryGetFromCache(query, out cachedValue))
             {
                 var queryTask = cachedValue as Task<TResult>;
                 if (queryTask != null)
                 {
                     //re-query if the task is canceld or failed.
-                    if ((queryTask.IsFaulted || queryTask.IsCanceled) && query.QueryOptions.HasFlag(QueryOptions.ReQueryWhenErrorCached))
+                    if ((queryTask.IsFaulted || queryTask.IsCanceled) && queryOptions.HasFlag(QueryOptions.ReQueryWhenErrorCached))
                     {
-                        return await QueryInternalAsync(query).ConfigureAwait(false);
+                        return await QueryInternalAsync(query, queryOptions).ConfigureAwait(false);
                     }
 
                     //query is cached, just await the result
@@ -66,7 +84,7 @@ namespace DotQuery.Core
                             //The stream is probably used... Dispose it and query again...
                             //todo: make cache stream configurable
                             cachedStream.Dispose();
-                            return await QueryInternalAsync(query).ConfigureAwait(false);
+                            return await QueryInternalAsync(query, queryOptions).ConfigureAwait(false);
                         }
                     }
                     else
@@ -80,18 +98,18 @@ namespace DotQuery.Core
             }
             else
             {
-                return await QueryInternalAsync(query).ConfigureAwait(false);
+                return await QueryInternalAsync(query, queryOptions).ConfigureAwait(false);
             }
         }
 
         /// <summary>
         /// Execute the query and update the cache when necessary
         /// </summary>        
-        protected async Task<TResult> QueryInternalAsync(TQuery query)
+        protected async Task<TResult> QueryInternalAsync(TQuery query, QueryOptions queryOptions)
         {
             Task<TResult> task = DoQueryAsync(query);
 
-            bool cacheResult = query.QueryOptions.HasFlag(QueryOptions.SaveToCache);
+            bool cacheResult = queryOptions.HasFlag(QueryOptions.SaveToCache);
             if (cacheResult) m_queryCache.CacheValue(query, task); //cache the task
             TResult result = await task.ConfigureAwait(false);
             if (cacheResult) m_queryCache.CacheValue(query, result); //cache the result

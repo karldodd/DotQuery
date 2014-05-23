@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DotQuery.Extensions
 {
-    public class MemoryCacheBasedQueryCache : IQueryCache
+    public class MemoryCacheBasedQueryCache : IQueryCache<CacheKey>
     {
         private MemoryCache m_objectCache = MemoryCache.Default;
 

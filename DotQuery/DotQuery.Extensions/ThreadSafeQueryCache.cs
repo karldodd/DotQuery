@@ -14,7 +14,7 @@ namespace DotQuery.Extensions
     /// <remarks>
     /// This query cache implementation is not thread safe!
     /// </remarks>
-    public class ThreadSafeQueryCache : IQueryCache
+    public class ThreadSafeQueryCache : IQueryCache<CacheKey>
     {
         private readonly ConcurrentDictionary<CacheKey, object> m_dictionary;
 

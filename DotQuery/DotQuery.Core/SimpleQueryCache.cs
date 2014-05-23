@@ -7,26 +7,26 @@ using System.Threading.Tasks;
 namespace DotQuery.Core
 {
     /// <summary>
-    /// A simple but working in-memory cache (backed by Dictionary<T,V>)
+    /// A simple but working in-memory cache (backed by Dictionary<TKey,V>)
     /// </summary>
     /// <remarks>
     /// This query cache implementation is not thread safe.
     /// </remarks>
-    public class SimpleQueryCache : IQueryCache
+    public class SimpleQueryCache<TKey> : IQueryCache<TKey>
     {
-        private readonly Dictionary<CacheKey, object> m_dictionary;
+        private readonly Dictionary<TKey, object> m_dictionary;
 
-        public SimpleQueryCache(IEqualityComparer<CacheKey> keyComparer)
+        public SimpleQueryCache(IEqualityComparer<TKey> keyComparer)
         {
-            m_dictionary = new Dictionary<CacheKey, object>(keyComparer);
+            m_dictionary = new Dictionary<TKey, object>(keyComparer);
         }
 
-        public bool TryGetFromCache(CacheKey key, out object value)
+        public bool TryGetFromCache(TKey key, out object value)
         {
             return m_dictionary.TryGetValue(key, out value);
         }
 
-        public void CacheValue(CacheKey key, object value)
+        public void CacheValue(TKey key, object value)
         {
             m_dictionary[key] = value;
         }

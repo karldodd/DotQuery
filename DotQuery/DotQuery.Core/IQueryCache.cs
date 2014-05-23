@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace DotQuery.Core
 {
-    public interface IQueryCache
+    public interface IQueryCache<in TKey>
     {
-        bool TryGetFromCache(CacheKey key, out object value);
-        void CacheValue(CacheKey key, object value);
+        bool TryGetFromCache(TKey key, out object value);
+        void CacheValue(TKey key, object value);
         void Trim();
         void Clear();
     }

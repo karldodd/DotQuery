@@ -10,7 +10,7 @@ namespace DotQuery.Core.Test.Stub
     {
         private readonly TimeSpan m_delayTime;
 
-        public AddQueryExecutor(TimeSpan delayTime) : base(new SimpleQueryCache(new DefaultQueryEqualityComparer()))
+        public AddQueryExecutor(TimeSpan delayTime) : base(new SimpleQueryCache<AddQuery>(new DefaultQueryEqualityComparer()))
         {
             m_delayTime = delayTime;
         }
