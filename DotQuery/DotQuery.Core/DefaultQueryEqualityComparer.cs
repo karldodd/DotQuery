@@ -13,7 +13,7 @@ namespace DotQuery.Core
     {
         public bool Equals(QueryBase x, QueryBase y)
         {
-            return x.ToString() == y.ToString();
+            return object.ReferenceEquals(x, y) || x.ToString() == y.ToString();
         }
 
         public int GetHashCode(QueryBase obj)
