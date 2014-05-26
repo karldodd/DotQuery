@@ -1,4 +1,4 @@
-﻿namespace DotQuery.Core.Async
+﻿namespace DotQuery.Core.Caches
 {
     public interface IQueryCache<in TKey, TValue>
     {

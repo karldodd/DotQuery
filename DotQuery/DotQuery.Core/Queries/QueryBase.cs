@@ -5,7 +5,7 @@ using System.Text;
 using Newtonsoft.Json;
 using DotQuery.Core;
 
-namespace DotQuery.Core
+namespace DotQuery.Core.Queries
 {
     /// <summary>
     /// The base class for any query object

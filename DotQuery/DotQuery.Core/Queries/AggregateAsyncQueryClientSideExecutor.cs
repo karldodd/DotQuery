@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DotQuery.Core.Async;
+using DotQuery.Core.Caches;
 
-namespace DotQuery.Core.Async
+namespace DotQuery.Core.Queries
 {
     /// <summary>
     /// The query executor which is able to fire a group of queries as a single composite query.

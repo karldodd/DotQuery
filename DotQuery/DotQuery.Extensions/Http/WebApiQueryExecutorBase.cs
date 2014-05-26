@@ -5,6 +5,8 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using DotQuery.Core.Async;
+using DotQuery.Core.Caches;
+using DotQuery.Core.Queries;
 using Newtonsoft.Json;
 using DotQuery.Core;
 using DotQuery.Extensions.Http;

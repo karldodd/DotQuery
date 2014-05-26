@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DotQuery.Core.Async
+namespace DotQuery.Core.Caches
 {
     /// <summary>
     /// A simple but working in-memory cache (backed by Dictionary<TKey,V>)

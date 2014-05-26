@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace DotQuery.Core
+namespace DotQuery.Core.Queries
 {
     /// <summary>
     /// A composite query that stands for a group of queries
