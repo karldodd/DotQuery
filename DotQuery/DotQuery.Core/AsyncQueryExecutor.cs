@@ -1,7 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using DotQuery.Core.Async;
 
-namespace DotQuery.Core.Async
+namespace DotQuery.Core
 {
     /// <summary>
     /// Core abstract class of this library that gracefully handles all cache read/hit/write on given query.
@@ -97,19 +97,5 @@ namespace DotQuery.Core.Async
         /// <param name="query"></param>
         /// <returns></returns>
         protected abstract Task<TResult> DoQueryAsync(TQuery query);
-    }
-
-    /// <summary>
-    /// Exception that representing invalid states inside query executor and its cache
-    /// </summary>
-    public class QueryCacheException : Exception
-    {
-        /// <summary>
-        /// Constructs a QueryCacheException
-        /// </summary>
-        public QueryCacheException(string msg)
-            : base(msg)
-        {
-        }
     }
 }

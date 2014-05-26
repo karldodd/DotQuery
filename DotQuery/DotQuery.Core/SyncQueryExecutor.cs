@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DotQuery.Core.Async;
 
-namespace DotQuery.Core.Sync
+namespace DotQuery.Core
 {
     /// <summary>
     /// Core abstract class of this library that gracefully handles all cache read/hit/write on given query.
@@ -27,10 +23,10 @@ namespace DotQuery.Core.Sync
         }
 
         /// <summary>
-        /// Execute the given query as an asynchronous operation.
+        /// Execute the given query as an synchronous operation.
         /// </summary>
         /// <param name="query">The query to be executed</param>
-        /// <returns>The task object representing the asynchronous operation</returns>
+        /// <returns>The result of the given query</returns>
         public TResult QuerySync(TQuery query)
         {
             var typedQuery = query as QueryBase; //todo: remove this
@@ -44,11 +40,11 @@ namespace DotQuery.Core.Sync
         }
 
         /// <summary>
-        /// Execute the given query as an asynchronous operation.
+        /// Execute the given query as an synchronous operation.
         /// </summary>
         /// <param name="query">The query to be executed</param>
         /// <param name="queryOptions">Query options to use for this query</param>
-        /// <returns>The task object representing the asynchronous operation</returns>
+        /// <returns>The result of the given query</returns>
         public TResult QuerySync(TQuery query, QueryOptions queryOptions)
         {
             if (queryOptions.HasFlag(QueryOptions.LookupCache))
@@ -91,19 +87,5 @@ namespace DotQuery.Core.Sync
         /// <param name="query"></param>
         /// <returns></returns>
         protected abstract TResult DoQuerySync(TQuery query);
-    }
-
-    /// <summary>
-    /// Exception that representing invalid states inside query executor and its cache
-    /// </summary>
-    public class QueryCacheException : Exception
-    {
-        /// <summary>
-        /// Constructs a QueryCacheException
-        /// </summary>
-        public QueryCacheException(string msg)
-            : base(msg)
-        {
-        }
     }
 }
