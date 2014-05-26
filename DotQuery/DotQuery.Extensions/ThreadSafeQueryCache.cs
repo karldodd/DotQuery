@@ -12,21 +12,21 @@ namespace DotQuery.Extensions
     /// <summary>
     /// A simple but working in-memory cache (backed by ConcurrentDictionary<TKey,V>)
     /// </summary>
-    public class ThreadSafeQueryCache<TKey, TResult> : IAsyncQueryCache<TKey, TResult>
+    public class ThreadSafeQueryCache<TKey, TResult> : IQueryCache<TKey, TResult>
     {
-        private readonly ConcurrentDictionary<TKey, AsyncLazy<TResult>> m_dictionary;
+        private readonly ConcurrentDictionary<TKey, TResult> m_dictionary;
 
         public ThreadSafeQueryCache(IEqualityComparer<TKey> keyComparer)
         {
-            m_dictionary = new ConcurrentDictionary<TKey, AsyncLazy<TResult>>(keyComparer);
+            m_dictionary = new ConcurrentDictionary<TKey, TResult>(keyComparer);
         }
 
-        public bool TryGet(TKey key, out AsyncLazy<TResult> value)
+        public bool TryGet(TKey key, out TResult value)
         {
             return m_dictionary.TryGetValue(key, out value);
         }
 
-        public void Set(TKey key, AsyncLazy<TResult> value)
+        public void Set(TKey key, TResult value)
         {
             m_dictionary[key] = value;
         }
@@ -41,7 +41,7 @@ namespace DotQuery.Extensions
             m_dictionary.Clear();
         }
 
-        public AsyncLazy<TResult> GetOrAdd(TKey key, AsyncLazy<TResult> lazyTask)
+        public TResult GetOrAdd(TKey key, TResult lazyTask)
         {
             return m_dictionary.GetOrAdd(key, lazyTask);
         }

@@ -8,16 +8,16 @@ namespace DotQuery.Core.Async
     /// <remarks>
     /// This query cache implementation is not thread safe.
     /// </remarks>
-    public class SimpleQueryCache<TKey, TValue> : IAsyncQueryCache<TKey, TValue>
+    public class SimpleQueryCache<TKey, TValue> : IQueryCache<TKey, TValue>
     {
-        private readonly Dictionary<TKey, AsyncLazy<TValue>> m_dictionary;
+        private readonly Dictionary<TKey, TValue> m_dictionary;
 
         public SimpleQueryCache(IEqualityComparer<TKey> keyComparer)
         {
-            m_dictionary = new Dictionary<TKey, AsyncLazy<TValue>>(keyComparer);
+            m_dictionary = new Dictionary<TKey, TValue>(keyComparer);
         }
 
-        public void Set(TKey key, AsyncLazy<TValue> value)
+        public void Set(TKey key, TValue value)
         {
             m_dictionary[key] = value;
         }
@@ -32,9 +32,9 @@ namespace DotQuery.Core.Async
             m_dictionary.Clear();
         }
 
-        public AsyncLazy<TValue> GetOrAdd(TKey key, AsyncLazy<TValue> lazyTask)
+        public TValue GetOrAdd(TKey key, TValue lazyTask)
         {
-            AsyncLazy<TValue> cached;
+            TValue cached;
             if (m_dictionary.TryGetValue(key, out cached))
             {
                 return cached;
@@ -46,7 +46,7 @@ namespace DotQuery.Core.Async
             }
         }
 
-        public bool TryGet(TKey key, out AsyncLazy<TValue> value)
+        public bool TryGet(TKey key, out TValue value)
         {
             return m_dictionary.TryGetValue(key, out value);
         }

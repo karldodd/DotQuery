@@ -1,23 +1,27 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using DotQuery.Core.Async;
 
-namespace DotQuery.Core.Async
+namespace DotQuery.Core.Sync
 {
     /// <summary>
     /// Core abstract class of this library that gracefully handles all cache read/hit/write on given query.
-    /// All real query executor should inherit from this class and implement DoQueryAsync.
+    /// All real sync query executor should inherit from this class and implement DoQuerySync.
     /// </summary>
     /// <typeparam name="TQuery">Type of the query object</typeparam>
     /// <typeparam name="TResult">Result type</typeparam>
-    public abstract class AsyncQueryExecutor<TQuery, TResult>
+    public abstract class SyncQueryExecutor<TQuery, TResult>
     {
-        private readonly IAsyncQueryCache<TQuery, TResult> m_queryTaskCache;
+        private readonly IQueryCache<TQuery, Lazy<TResult>> m_queryTaskCache;
 
         /// <summary>
         /// Protected constructor of the query executor
         /// </summary>
         /// <param name="queryCache"></param>
-        protected AsyncQueryExecutor(IAsyncQueryCache<TQuery, TResult> queryCache)
+        protected SyncQueryExecutor(IQueryCache<TQuery, Lazy<TResult>> queryCache)
         {
             m_queryTaskCache = queryCache;
         }
@@ -27,16 +31,16 @@ namespace DotQuery.Core.Async
         /// </summary>
         /// <param name="query">The query to be executed</param>
         /// <returns>The task object representing the asynchronous operation</returns>
-        public Task<TResult> QueryAsync(TQuery query)
+        public TResult QuerySync(TQuery query)
         {
             var typedQuery = query as QueryBase; //todo: remove this
 
             if (typedQuery != null)
             {
-                return this.QueryAsync(query, typedQuery.QueryOptions);
+                return this.QuerySync(query, typedQuery.QueryOptions);
             }
 
-            return this.QueryAsync(query, QueryOptions.Default);
+            return this.QuerySync(query, QueryOptions.Default);
         }
 
         /// <summary>
@@ -45,58 +49,48 @@ namespace DotQuery.Core.Async
         /// <param name="query">The query to be executed</param>
         /// <param name="queryOptions">Query options to use for this query</param>
         /// <returns>The task object representing the asynchronous operation</returns>
-        public Task<TResult> QueryAsync(TQuery query, QueryOptions queryOptions)
+        public TResult QuerySync(TQuery query, QueryOptions queryOptions)
         {
-            Task<TResult> queryTask = null;
             if (queryOptions.HasFlag(QueryOptions.LookupCache))
             {
                 if (queryOptions.HasFlag(QueryOptions.SaveToCache))
                 {
-                    queryTask = m_queryTaskCache.GetOrAdd(query, new AsyncLazy<TResult>(() => DoQueryAsync(query))).Value;
+                    return m_queryTaskCache.GetOrAdd(query, new Lazy<TResult>(() => DoQuerySync(query))).Value;
                 }
                 else
                 {
-                    AsyncLazy<TResult> asyncLazyResult;
-                    if (m_queryTaskCache.TryGet(query, out asyncLazyResult))
+                    Lazy<TResult> lazyResult;
+                    if (m_queryTaskCache.TryGet(query, out lazyResult))
                     {
-                        queryTask = asyncLazyResult.Value;                        
+                        return lazyResult.Value;
                     }
-                    else {
-                        //no task cached, do it directly
-                        return DoQueryAsync(query);
+                    else
+                    {
+                        return DoQuerySync(query);
                     }
                 }
-                
-                //re-query if the task is canceld or failed.
-                if ((queryTask.IsFaulted || queryTask.IsCanceled) && queryOptions.HasFlag(QueryOptions.ReQueryWhenErrorCached))
-                {
-                    this.QueryAsync(query, queryOptions ^ QueryOptions.LookupCache);
-                }
-
-                //query is cached, just await the result
-                return queryTask;                
             }
             else
             {
                 if (queryOptions.HasFlag(QueryOptions.SaveToCache))
                 {
-                    var newQueryTask = new AsyncLazy<TResult>(() => DoQueryAsync(query));
+                    var newQueryTask = new Lazy<TResult>(() => DoQuerySync(query));
                     m_queryTaskCache.Set(query, newQueryTask);
                     return newQueryTask.Value;
                 }
                 else
                 {
-                    return DoQueryAsync(query);
+                    return DoQuerySync(query);
                 }
             }
         }
-        
+
         /// <summary>
         /// Execute the query in the real world (without cache read/write)
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        protected abstract Task<TResult> DoQueryAsync(TQuery query);
+        protected abstract TResult DoQuerySync(TQuery query);
     }
 
     /// <summary>

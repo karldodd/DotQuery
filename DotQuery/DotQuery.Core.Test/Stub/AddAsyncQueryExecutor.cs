@@ -11,7 +11,7 @@ namespace DotQuery.Core.Test.Stub
     {
         private readonly TimeSpan m_delayTime;
 
-        public AddAsyncQueryExecutor(TimeSpan delayTime) : base(new SimpleQueryCache<AddQuery, int>(new DefaultQueryEqualityComparer()))
+        public AddAsyncQueryExecutor(TimeSpan delayTime) : base(new SimpleQueryCache<AddQuery, AsyncLazy<int>>(new DefaultQueryEqualityComparer()))
         {
             m_delayTime = delayTime;
         }

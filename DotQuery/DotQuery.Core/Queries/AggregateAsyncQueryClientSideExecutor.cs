@@ -23,7 +23,7 @@ namespace DotQuery.Core.Async
         /// </summary>
         /// <param name="childAsyncQueryExecutor">query executor to execute child queries</param>
         /// <param name="queryCache">The query cache to be used</param>
-        public AggregateAsyncQueryClientSideExecutor(AsyncQueryExecutor<TQuery, TResult> childAsyncQueryExecutor, IAsyncQueryCache<AggregateQuery, List<TResult>> queryCache)
+        public AggregateAsyncQueryClientSideExecutor(AsyncQueryExecutor<TQuery, TResult> childAsyncQueryExecutor, IQueryCache<AggregateQuery, AsyncLazy<List<TResult>>> queryCache)
             : base(queryCache)
         {
             _mChildAsyncQueryExecutor = childAsyncQueryExecutor;
