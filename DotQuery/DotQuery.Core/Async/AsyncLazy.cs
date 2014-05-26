@@ -1,15 +1,12 @@
 ﻿#if portable
 using Microsoft.Runtime.CompilerServices;
 #else
-using System.Runtime.CompilerServices;
 #endif
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
-namespace DotQuery.Core
+namespace DotQuery.Core.Async
 {
     //http://blogs.msdn.com/b/pfxteam/archive/2011/01/15/10116210.aspx
     public class AsyncLazy<T> : Lazy<Task<T>>

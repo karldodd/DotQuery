@@ -1,4 +1,5 @@
 ﻿using System;
+using DotQuery.Core.Async;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DotQuery.Core.Test.Stub;
 using System.Threading.Tasks;

@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace DotQuery.Core
+namespace DotQuery.Core.Async
 {
     /// <summary>
     /// Core abstract class of this library that gracefully handles all cache read/hit/write on given query.

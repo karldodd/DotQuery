@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using DotQuery.Core.Async;
 using Newtonsoft.Json;
 using DotQuery.Core;
 using DotQuery.Extensions.Http;

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.Caching;
 using System.Text;
 using System.Threading.Tasks;
+using DotQuery.Core.Async;
 
 namespace DotQuery.Extensions
 {

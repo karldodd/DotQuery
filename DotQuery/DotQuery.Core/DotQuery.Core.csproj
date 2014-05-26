@@ -47,16 +47,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AggregateQuery.cs" />
-    <Compile Include="AggregateAsyncQueryClientSideExecutor.cs" />
-    <Compile Include="AsyncLazy.cs" />
+    <Compile Include="Async\AggregateAsyncQueryClientSideExecutor.cs" />
+    <Compile Include="Async\AsyncLazy.cs" />
     <Compile Include="DefaultQueryEqualityComparer.cs" />
     <Compile Include="IQueryProducer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryBase.cs" />
-    <Compile Include="IAsyncQueryCache.cs" />
-    <Compile Include="AsyncQueryExecutor.cs" />
+    <Compile Include="Async\IAsyncQueryCache.cs" />
+    <Compile Include="Async\AsyncQueryExecutor.cs" />
     <Compile Include="QueryOptions.cs" />
-    <Compile Include="SimpleQueryCache.cs" />
+    <Compile Include="Async\SimpleQueryCache.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
