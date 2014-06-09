@@ -50,9 +50,9 @@ namespace DotQuery.Core
         public Task<TResult> QueryAsync(TQuery query, QueryOptions queryOptions)
         {
             Task<TResult> queryTask = null;
-            if (queryOptions.HasFlag(QueryOptions.LookupCache))
+            if ((queryOptions & QueryOptions.LookupCache) == QueryOptions.LookupCache)
             {
-                if (queryOptions.HasFlag(QueryOptions.SaveToCache))
+                if ((queryOptions & QueryOptions.SaveToCache) == QueryOptions.SaveToCache)
                 {
                     queryTask = m_queryTaskCache.GetOrAdd(query, new AsyncLazy<TResult>(() => DoQueryAsync(query))).Value;
                 }
@@ -70,7 +70,7 @@ namespace DotQuery.Core
                 }
                 
                 //re-query if the task is canceld or failed.
-                if ((queryTask.IsFaulted || queryTask.IsCanceled) && queryOptions.HasFlag(QueryOptions.ReQueryWhenErrorCached))
+                if ((queryTask.IsFaulted || queryTask.IsCanceled) && (queryOptions & QueryOptions.ReQueryWhenErrorCached) == QueryOptions.ReQueryWhenErrorCached)
                 {
                     this.QueryAsync(query, queryOptions ^ QueryOptions.LookupCache);
                 }
@@ -80,7 +80,7 @@ namespace DotQuery.Core
             }
             else
             {
-                if (queryOptions.HasFlag(QueryOptions.SaveToCache))
+                if ((queryOptions & QueryOptions.SaveToCache) == QueryOptions.SaveToCache)
                 {
                     var newQueryTask = new AsyncLazy<TResult>(() => DoQueryAsync(query));
                     m_queryTaskCache.Set(query, newQueryTask);

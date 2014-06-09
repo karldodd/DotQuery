@@ -49,9 +49,9 @@ namespace DotQuery.Core
         /// <returns>The result of the given query</returns>
         public TResult QuerySync(TQuery query, QueryOptions queryOptions)
         {
-            if (queryOptions.HasFlag(QueryOptions.LookupCache))
+            if ((queryOptions & QueryOptions.LookupCache) == QueryOptions.LookupCache)
             {
-                if (queryOptions.HasFlag(QueryOptions.SaveToCache))
+                if ((queryOptions & QueryOptions.SaveToCache) == QueryOptions.SaveToCache)
                 {
                     return m_queryTaskCache.GetOrAdd(query, new Lazy<TResult>(() => DoQuerySync(query))).Value;
                 }
@@ -70,7 +70,7 @@ namespace DotQuery.Core
             }
             else
             {
-                if (queryOptions.HasFlag(QueryOptions.SaveToCache))
+                if ((queryOptions & QueryOptions.SaveToCache) == QueryOptions.SaveToCache)
                 {
                     var newQueryTask = new Lazy<TResult>(() => DoQuerySync(query));
                     m_queryTaskCache.Set(query, newQueryTask);
