@@ -56,5 +56,7 @@
     <file src="DotQuery.Extensions.Portable\bin\Release\DotQuery.Extensions.dll" target="lib\portable-win+net40+sl40+wp80\DotQuery.Extensions.dll" />
     <file src="DotQuery.Extensions.Portable\bin\Release\DotQuery.Extensions.pdb" target="lib\portable-win+net40+sl40+wp80\DotQuery.Extensions.pdb" />
     <file src="DotQuery.Extensions.Portable\bin\Release\DotQuery.Extensions.xml" target="lib\portable-win+net40+sl40+wp80\DotQuery.Extensions.xml" />
+
+    <file src="DotQuery.Extensions\**\*.cs" target="src" />
   </files>
 </package>

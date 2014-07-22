@@ -41,5 +41,7 @@
     <file src="DotQuery.Core.Portable\bin\Release\DotQuery.Core.dll" target="lib\portable-win+net40+sl40+wp80\DotQuery.Core.dll" />
     <file src="DotQuery.Core.Portable\bin\Release\DotQuery.Core.pdb" target="lib\portable-win+net40+sl40+wp80\DotQuery.Core.pdb" />
     <file src="DotQuery.Core.Portable\bin\Release\DotQuery.Core.xml" target="lib\portable-win+net40+sl40+wp80\DotQuery.Core.xml" />
+    
+    <file src="DotQuery.Core\**\*.cs" target="src" />
   </files>
 </package>
