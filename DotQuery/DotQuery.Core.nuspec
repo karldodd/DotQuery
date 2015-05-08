@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>DotQuery.Core</id>
-    <version>1.0.1.0</version>
+    <version>1.1.0-beta</version>
     <title>DotQuery.Core</title>
     <authors>karldodd</authors>
     <owners>karldodd</owners>
@@ -10,22 +10,24 @@
     <iconUrl>https://raw.github.com/karldodd/DotQuery/master/DotQuery/DotQueryIcon.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Core libs of DotQuery, a lightweight query result caching framework for .NET</description>
-    <releaseNotes>1.0.0: First release
+    <releaseNotes>
+      * 1.1.0: Add IAsyncQueryExecutor
+      * 1.0.0: First release
     </releaseNotes>
     <copyright>Copyright 2013</copyright>
     <tags>dotquery query cache result async portable</tags> 
     <dependencies>
       <group targetFramework="net45">
-        <dependency id="Newtonsoft.Json" version="5.0.6" />
+        <dependency id="Newtonsoft.Json" version="6.0.8" />
       </group>
       <group targetFramework="win8">
-        <dependency id="Newtonsoft.Json" version="5.0.6" />
+        <dependency id="Newtonsoft.Json" version="6.0.8" />
       </group>
       <group targetFramework="portable-win+net40+sl40+wp80">
-        <dependency id="Newtonsoft.Json" version="5.0.6" />
-        <dependency id="Microsoft.Bcl" version="1.0.19" />
-        <dependency id="Microsoft.Bcl.Async" version="1.0.16" />
-        <dependency id="Microsoft.Bcl.Build" version="1.0.8" />
+        <dependency id="Newtonsoft.Json" version="6.0.8" />
+        <dependency id="Microsoft.Bcl" version="1.1.9" />
+        <dependency id="Microsoft.Bcl.Async" version="1.0.168" />
+        <dependency id="Microsoft.Bcl.Build" version="1.0.21" />
       </group>
     </dependencies>    
   </metadata>
