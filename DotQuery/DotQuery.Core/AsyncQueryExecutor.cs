@@ -11,7 +11,7 @@ namespace DotQuery.Core
     /// </summary>
     /// <typeparam name="TQuery">Type of the query object</typeparam>
     /// <typeparam name="TResult">Result type</typeparam>
-    public abstract class AsyncQueryExecutor<TQuery, TResult>
+    public abstract class AsyncQueryExecutor<TQuery, TResult> : IAsyncQueryExecutor<TQuery, TResult>
     {
         private readonly IQueryCache<TQuery, AsyncLazy<TResult>> m_queryTaskCache;
 

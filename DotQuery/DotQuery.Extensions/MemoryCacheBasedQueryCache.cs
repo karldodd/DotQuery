@@ -12,12 +12,14 @@ namespace DotQuery.Extensions
 {
     public class MemoryCacheBasedQueryCache<TKey, TValue> : IQueryCache<TKey, TValue>
     {
+        private readonly IKeySerializer<TKey> m_keySerializer;
         private MemoryCache m_objectCache = MemoryCache.Default;
 
-        public MemoryCacheBasedQueryCache()
+        public MemoryCacheBasedQueryCache(IKeySerializer<TKey> keySerializer)
         {
+            this.m_keySerializer = keySerializer;
         }
-        
+
         public void Trim()
         {
             m_objectCache.Trim(75);
@@ -30,13 +32,13 @@ namespace DotQuery.Extensions
 
         public TValue GetOrAdd(TKey key, TValue lazyTask)
         {
-            var existing = m_objectCache.AddOrGetExisting(new CacheItem(key.ToString(), lazyTask), new CacheItemPolicy() { SlidingExpiration = TimeSpan.FromHours(2) });
+            var existing = m_objectCache.AddOrGetExisting(new CacheItem(m_keySerializer.SerializeToString(key), lazyTask), new CacheItemPolicy() { SlidingExpiration = TimeSpan.FromHours(2) });
             return existing == null ? lazyTask : (TValue)existing.Value;
         }
 
         public bool TryGet(TKey key, out TValue value)
         {
-            object cached = m_objectCache.Get(key.ToString());
+            object cached = m_objectCache.Get(m_keySerializer.SerializeToString(key));
 
             if (cached == null)
             {
@@ -52,8 +54,9 @@ namespace DotQuery.Extensions
 
         public void Set(TKey key, TValue value)
         {
-            m_objectCache.Set(new CacheItem(key.ToString(), value), new CacheItemPolicy() { SlidingExpiration = TimeSpan.FromHours(2) });
-            m_objectCache[key.ToString()] = value;
+            string keyAsString = m_keySerializer.SerializeToString(key);
+            m_objectCache.Set(new CacheItem(keyAsString, value), new CacheItemPolicy() { SlidingExpiration = TimeSpan.FromHours(2) });
+            m_objectCache[keyAsString] = value;
         }
 
     }

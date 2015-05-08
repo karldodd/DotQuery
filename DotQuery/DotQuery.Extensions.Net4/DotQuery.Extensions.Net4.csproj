@@ -85,6 +85,9 @@
     <Compile Include="..\DotQuery.Extensions\Http\WebApiQueryExecutorBase.cs">
       <Link>Http\WebApiQueryExecutorBase.cs</Link>
     </Compile>
+    <Compile Include="..\DotQuery.Extensions\IKeySerializer.cs">
+      <Link>IKeySerializer.cs</Link>
+    </Compile>
     <Compile Include="..\DotQuery.Extensions\MemoryCacheBasedQueryCache.cs">
       <Link>MemoryCacheBasedQueryCache.cs</Link>
     </Compile>

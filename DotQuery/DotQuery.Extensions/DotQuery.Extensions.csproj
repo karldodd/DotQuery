@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="Http\WebApiClient.cs" />
     <Compile Include="Http\WebApiQueryExecutorBase.cs" />
+    <Compile Include="IKeySerializer.cs" />
     <Compile Include="MemoryCacheBasedQueryCache.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ThreadSafeQueryCache.cs" />

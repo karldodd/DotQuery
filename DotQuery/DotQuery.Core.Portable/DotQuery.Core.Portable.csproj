@@ -67,6 +67,9 @@
     <Compile Include="..\DotQuery.Core\Caches\SimpleQueryCache.cs">
       <Link>Caches\SimpleQueryCache.cs</Link>
     </Compile>
+    <Compile Include="..\DotQuery.Core\IAsyncQueryExecutor.cs">
+      <Link>IAsyncQueryExecutor.cs</Link>
+    </Compile>
     <Compile Include="..\DotQuery.Core\Properties\AssemblyInfo.cs">
       <Link>Properties\AssemblyInfo.cs</Link>
     </Compile>
