@@ -55,7 +55,6 @@
     <Compile Include="TestQueryExecutor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\DotQuery.Core\DotQuery.Core.csproj">
       <Project>{5d61860b-f376-4b19-8dca-f4bd890c161b}</Project>
