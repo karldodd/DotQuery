@@ -36,6 +36,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Runtime.Caching" />
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -59,6 +60,10 @@
     <ProjectReference Include="..\DotQuery.Core\DotQuery.Core.csproj">
       <Project>{5d61860b-f376-4b19-8dca-f4bd890c161b}</Project>
       <Name>DotQuery.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DotQuery.Extensions\DotQuery.Extensions.csproj">
+      <Project>{00effc31-3533-412e-b679-1624539753d0}</Project>
+      <Name>DotQuery.Extensions</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

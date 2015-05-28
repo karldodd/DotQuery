@@ -7,6 +7,10 @@ using System.Diagnostics;
 
 namespace DotQuery.Core.Test
 {
+    using System.Runtime.Caching;
+
+    using DotQuery.Extensions;
+
     [TestClass]
     public class TestQueryExecutor
     {
@@ -139,6 +143,29 @@ namespace DotQuery.Core.Test
             Assert.IsTrue(TryCatchException<OverflowException>(() => TimeCost(async () => { await m_exec.QueryAsync(q2); })));
 
             Assert.AreEqual(1, ((AddAsyncQueryExecutor)m_exec).RealCalcCount);
+        }
+
+        [TestMethod]
+        public void TestMemoryCacheQueryCache()
+        {
+            m_exec = new AddAsyncQueryExecutor(new MemoryCacheBasedQueryCache<AddQuery, AsyncLazy<int>>(new DefaultKeySerializer<AddQuery>(), TimeSpan.FromMinutes(1)), m_delayTime);
+            var q1 = new AddQuery { Left = 1, Right = 2 };
+
+            Assert.IsTrue(
+                TimeCost(async () => { Assert.AreEqual(3, await m_exec.QueryAsync(q1)); })
+                >=
+                m_delayTime, "Should take longer");
+        }
+
+        [TestMethod]
+        public void TestObjectCacheBehavior()
+        {
+            CacheItemPolicy policy = new CacheItemPolicy() {SlidingExpiration = TimeSpan.FromMinutes(1)};
+            Assert.AreEqual(null, MemoryCache.Default.AddOrGetExisting(new CacheItem("test", "one"), policy).Value);
+            Assert.AreEqual("test", MemoryCache.Default.AddOrGetExisting(new CacheItem("test", "two"), policy).Key);
+            Assert.AreEqual("one", MemoryCache.Default.AddOrGetExisting(new CacheItem("test", "two"), policy).Value);
+            Assert.AreEqual("one", MemoryCache.Default.AddOrGetExisting("test", "three", policy));
+
         }
     }
 }

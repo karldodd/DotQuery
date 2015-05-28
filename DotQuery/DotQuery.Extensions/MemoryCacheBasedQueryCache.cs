@@ -34,8 +34,8 @@ namespace DotQuery.Extensions
 
         public TValue GetOrAdd(TKey key, TValue lazyTask)
         {
-            var existing = m_objectCache.AddOrGetExisting(new CacheItem(m_keySerializer.SerializeToString(key), lazyTask), new CacheItemPolicy() { SlidingExpiration = m_expirationSpan });
-            return existing == null ? lazyTask : (TValue)existing.Value;
+            object existingValue = m_objectCache.AddOrGetExisting(new CacheItem(m_keySerializer.SerializeToString(key), lazyTask), new CacheItemPolicy() { SlidingExpiration = m_expirationSpan }).Value;
+            return (TValue)(existingValue ?? lazyTask);
         }
 
         public bool TryGet(TKey key, out TValue value)
