@@ -63,6 +63,9 @@
     <Compile Include="..\DotQuery.Core\AsyncQueryExecutor.cs">
       <Link>AsyncQueryExecutor.cs</Link>
     </Compile>
+    <Compile Include="..\DotQuery.Core\Caches\EmptyQueryCache.cs">
+      <Link>Caches\EmptyQueryCache.cs</Link>
+    </Compile>
     <Compile Include="..\DotQuery.Core\Caches\IQueryCache.cs">
       <Link>Caches\IQueryCache.cs</Link>
     </Compile>

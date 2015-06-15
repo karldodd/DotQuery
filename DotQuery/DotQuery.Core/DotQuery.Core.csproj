@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Caches\EmptyQueryCache.cs" />
     <Compile Include="IAsyncQueryExecutor.cs" />
     <Compile Include="Queries\AggregateQuery.cs" />
     <Compile Include="Queries\AggregateAsyncQueryClientSideExecutor.cs" />
