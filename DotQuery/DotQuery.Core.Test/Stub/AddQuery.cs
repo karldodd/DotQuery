@@ -11,5 +11,10 @@ namespace DotQuery.Core.Test.Stub
     {
         public int Left { get; set; }
         public int Right { get; set; }
+
+        public override string ToString()
+        {
+            return string.Format("{0}+{1}", Left, Right);
+        }
     }
 }

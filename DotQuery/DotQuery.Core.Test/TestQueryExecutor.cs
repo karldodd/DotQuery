@@ -8,7 +8,7 @@ using System.Diagnostics;
 namespace DotQuery.Core.Test
 {
     using System.Runtime.Caching;
-
+    using DotQuery.Core.Caches;
     using DotQuery.Extensions;
 
     [TestClass]
@@ -150,6 +150,28 @@ namespace DotQuery.Core.Test
         {
             m_exec = new AddAsyncQueryExecutor(new MemoryCacheBasedQueryCache<AddQuery, AsyncLazy<int>>(new DefaultKeySerializer<AddQuery>(), TimeSpan.FromMinutes(1)), m_delayTime);
             var q1 = new AddQuery { Left = 1, Right = 2 };
+
+            Assert.IsTrue(
+                TimeCost(async () => { Assert.AreEqual(3, await m_exec.QueryAsync(q1)); })
+                >=
+                m_delayTime, "Should take longer");
+
+            Assert.IsTrue(
+                TimeCost(async () => { Assert.AreEqual(3, await m_exec.QueryAsync(q1)); })
+                <=
+                TimeSpan.FromMilliseconds(50), "Should hit cache");  //well, a cache hit
+        }
+
+        [TestMethod]
+        public void TestEmptyQueryCache()
+        {
+            m_exec = new AddAsyncQueryExecutor(EmptyQueryCache<AddQuery, AsyncLazy<int>>.Instance, m_delayTime);
+            var q1 = new AddQuery { Left = 1, Right = 2 };
+
+            Assert.IsTrue(
+                TimeCost(async () => { Assert.AreEqual(3, await m_exec.QueryAsync(q1)); })
+                >=
+                m_delayTime, "Should take longer");
 
             Assert.IsTrue(
                 TimeCost(async () => { Assert.AreEqual(3, await m_exec.QueryAsync(q1)); })
