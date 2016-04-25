@@ -1,0 +1,26 @@
+﻿{
+  "version": "1.2.0-beta1",
+  "description": "Core libs of DotQuery, a lightweight query result caching framework for .NET",
+  "authors": [ "karldodd" ],
+  "tags": [ "dotquery", "query", "cache", "result", "async", "portable" ],
+  "projectUrl": "https://github.com/karldodd/DotQuery",
+  "licenseUrl": "",
+  "copyright": "Copyright ©  2013",
+
+  "dependencies": {
+    "Newtonsoft.Json": "6.0.3"
+  },
+
+  "frameworks": {
+    "net451": { },
+    "dotnet5.4": {
+      "dependencies": {
+        "Microsoft.CSharp": "4.0.1-beta-23516",
+        "System.Collections": "4.0.11-beta-23516",
+        "System.Linq": "4.0.1-beta-23516",
+        "System.Runtime": "4.0.21-beta-23516",
+        "System.Threading": "4.0.11-beta-23516"
+      }
+    }
+  }
+}
