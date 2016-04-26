@@ -16,7 +16,7 @@ namespace DotQuery.Core.Queries
     /// </remarks>
     /// <typeparam name="TQuery">The type of a child query</typeparam>
     /// <typeparam name="TResult">The result type of a child query</typeparam>
-    public class AggregateAsyncQueryClientSideExecutor<TQuery, TResult> : AsyncQueryExecutor<AggregateQuery, List<TResult>> 
+    public class AggregateAsyncQueryClientSideExecutor<TQuery, TResult> : AsyncQueryExecutor<AggregateQuery, List<TResult>>
     {
         private readonly AsyncQueryExecutor<TQuery, TResult> _mChildAsyncQueryExecutor;
 
@@ -57,11 +57,7 @@ namespace DotQuery.Core.Queries
                 //wait all one by one pattern
                 while (taskList.Count > 0)
                 {
-#if portable
-                    Task<TResult> completedTask = await TaskEx.WhenAny(taskList);                    
-#else
                     Task<TResult> completedTask = await Task.WhenAny(taskList);
-#endif
                     int index = taskList.IndexOf(completedTask);
                     QueryBase query = queryList[index];
 

@@ -1,5 +1,4 @@
 ﻿using System;
-using DotQuery.Core.Async;
 using DotQuery.Core.Caches;
 using DotQuery.Core.Queries;
 

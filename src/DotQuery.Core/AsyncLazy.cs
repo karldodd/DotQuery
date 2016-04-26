@@ -1,8 +1,4 @@
-﻿#if portable
-using Microsoft.Runtime.CompilerServices;
-#else
-#endif
-using System;
+﻿using System;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 

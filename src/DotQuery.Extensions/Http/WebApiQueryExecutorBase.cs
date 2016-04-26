@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
+using DotQuery.Core;
 using DotQuery.Core.Async;
 using DotQuery.Core.Caches;
 using DotQuery.Core.Queries;
 using Newtonsoft.Json;
-using DotQuery.Core;
-using DotQuery.Extensions.Http;
 
 namespace DotQuery.Extensions.Http
 {
