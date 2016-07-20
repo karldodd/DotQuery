@@ -1,12 +1,9 @@
 ﻿using System;
-#if NET451 || DNX451
-using System.Runtime.Caching;
-#endif
 using DotQuery.Core.Caches;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace DotQuery.Extensions
 {
-#if NET451 || DNX451
     public class MemoryCacheBasedQueryCache<TKey, TValue> : IQueryCache<TKey, TValue>
     {
         private readonly IKeySerializer<TKey> m_keySerializer;
@@ -59,5 +56,4 @@ namespace DotQuery.Extensions
         }
 
     }
-#endif
 }
