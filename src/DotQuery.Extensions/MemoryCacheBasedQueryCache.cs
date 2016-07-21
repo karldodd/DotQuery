@@ -6,35 +6,41 @@ namespace DotQuery.Extensions
 {
     public class MemoryCacheBasedQueryCache<TKey, TValue> : IQueryCache<TKey, TValue>
     {
-        private readonly IKeySerializer<TKey> m_keySerializer;
-        private readonly TimeSpan m_expirationSpan;
-        private MemoryCache m_objectCache = MemoryCache.Default;
+        private readonly IKeySerializer<TKey> _keySerializer;
+        private readonly TimeSpan _slidingExpiration;
+        private readonly MemoryCache _memoryCache = new MemoryCache(new MemoryCacheOptions());
 
-        public MemoryCacheBasedQueryCache(IKeySerializer<TKey> keySerializer, TimeSpan expirationSpan)
+        public MemoryCacheBasedQueryCache(IKeySerializer<TKey> keySerializer, TimeSpan slidingExpiration)
         {
-            this.m_keySerializer = keySerializer;
-            this.m_expirationSpan = expirationSpan;
+            this._keySerializer = keySerializer;
+            this._slidingExpiration = slidingExpiration;
         }
 
         public void Trim()
         {
-            m_objectCache.Trim(75);
+            _memoryCache.Compact(75);
         }
 
         public void Clear()
         {
-            m_objectCache.Trim(100);
+            _memoryCache.Compact(100);
         }
 
         public TValue GetOrAdd(TKey key, TValue lazyTask)
         {
-            object existingValue = m_objectCache.AddOrGetExisting(new CacheItem(m_keySerializer.SerializeToString(key), lazyTask), new CacheItemPolicy() { SlidingExpiration = m_expirationSpan }).Value;
-            return (TValue)(existingValue ?? lazyTask);
+            var entry = _memoryCache.CreateEntry(key);
+            return _memoryCache.GetOrCreate(
+                _keySerializer.SerializeToString(key),
+                e =>
+                {
+                    e.SlidingExpiration = _slidingExpiration;
+                    return lazyTask;
+                });
         }
 
         public bool TryGet(TKey key, out TValue value)
         {
-            object cached = m_objectCache.Get(m_keySerializer.SerializeToString(key));
+            object cached = _memoryCache.Get(_keySerializer.SerializeToString(key));
 
             if (cached == null)
             {
@@ -50,9 +56,8 @@ namespace DotQuery.Extensions
 
         public void Set(TKey key, TValue value)
         {
-            string keyAsString = m_keySerializer.SerializeToString(key);
-            m_objectCache.Set(new CacheItem(keyAsString, value), new CacheItemPolicy() { SlidingExpiration = m_expirationSpan });
-            m_objectCache[keyAsString] = value;
+            string keyAsString = _keySerializer.SerializeToString(key);
+            _memoryCache.Set(keyAsString, value, new MemoryCacheEntryOptions { SlidingExpiration = _slidingExpiration });
         }
 
     }
