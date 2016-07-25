@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Threading;
 using System.Threading.Tasks;
 using DotQuery.Core.Async;
 using DotQuery.Core.Caches;
@@ -197,7 +196,7 @@ namespace DotQuery.Core.Test
             var cache = new MemoryCacheBasedQueryCache<AddQuery, AsyncLazy<int>>(new DefaultKeySerializer<AddQuery>(), TimeSpan.FromMinutes(1));
             m_exec = new AddAsyncQueryExecutor(cache, m_delayTime);
             var q1 = new AddQuery { Left = 1, Right = 2 };
-            m_exec.QueryAsync(q1, new CacheEntryOptions { SlidingExpiration = TimeSpan.FromMilliseconds(100) });
+            m_exec.QueryAsync(q1, new CacheEntryOptions { SlidingExpiration = TimeSpan.FromMinutes(2) });
             Assert.True(
                 TimeCost(async () => { Assert.Equal(3, await m_exec.QueryAsync(q1)); })
                 >=
