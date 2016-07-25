@@ -9,21 +9,21 @@
     public class EmptyQueryCache<TKey, TValue> : IQueryCache<TKey, TValue>
     {
         internal EmptyQueryCache()
-        {           
+        {
         }
 
         public static EmptyQueryCache<TKey, TValue> Instance = new EmptyQueryCache<TKey, TValue>();
 
         public void Set(TKey key, TValue value)
-        {            
+        {
         }
 
         public void Trim()
-        {         
+        {
         }
 
         public void Clear()
-        {         
+        {
         }
 
         public TValue GetOrAdd(TKey key, TValue lazyTask)
@@ -35,6 +35,15 @@
         {
             value = default(TValue);
             return false;
+        }
+
+        public TValue GetOrAdd(TKey key, TValue lazyTask, CacheEntryOptions options)
+        {
+            return lazyTask;
+        }
+
+        public void Set(TKey key, TValue value, CacheEntryOptions options)
+        {
         }
     }
 }

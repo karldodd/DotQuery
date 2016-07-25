@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 using DotQuery.Core.Async;
 using DotQuery.Core.Caches;
@@ -188,6 +189,24 @@ namespace DotQuery.Core.Test
             //Assert.Equal("test", MemoryCache.Default.AddOrGetExisting(new CacheItem("test", "two"), policy).Key);
             //Assert.Equal("one", MemoryCache.Default.AddOrGetExisting(new CacheItem("test", "two"), policy).Value);
             //Assert.Equal("one", MemoryCache.Default.AddOrGetExisting("test", "three", policy));
+        }
+
+        [Fact]
+        public void TestCacheEntryOptions()
+        {
+            var cache = new MemoryCacheBasedQueryCache<AddQuery, AsyncLazy<int>>(new DefaultKeySerializer<AddQuery>(), TimeSpan.FromMinutes(1));
+            m_exec = new AddAsyncQueryExecutor(cache, m_delayTime);
+            var q1 = new AddQuery { Left = 1, Right = 2 };
+            m_exec.QueryAsync(q1, new CacheEntryOptions { SlidingExpiration = TimeSpan.FromMilliseconds(100) });
+            Assert.True(
+                TimeCost(async () => { Assert.Equal(3, await m_exec.QueryAsync(q1)); })
+                >=
+                m_delayTime, "Should take longer");
+
+            Assert.True(
+                TimeCost(async () => { Assert.Equal(3, await m_exec.QueryAsync(q1)); })
+                <=
+                TimeSpan.FromMilliseconds(50), "Should hit cache");  //well, a cache hit
         }
     }
 }

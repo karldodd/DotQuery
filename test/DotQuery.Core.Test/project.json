@@ -6,7 +6,11 @@
     "authors": [ "karldodd", "qqbuby" ],
     "tags": [ "" ],
     "projectUrl": "",
-    "licenseUrl": ""
+    "licenseUrl": "",
+    "repository": {
+      "type": "git",
+      "url": ""
+    }
   },
   "copyright": "Copyright ©  2013",
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using DotQuery.Core;
 using DotQuery.Core.Caches;
 using Microsoft.Extensions.Caching.Memory;
 
@@ -26,14 +27,23 @@ namespace DotQuery.Extensions
             _memoryCache.Compact(100);
         }
 
-        public TValue GetOrAdd(TKey key, TValue lazyTask)
+        public TValue GetOrAdd(TKey key, TValue lazyTask) => GetOrAdd(key, lazyTask, new CacheEntryOptions { SlidingExpiration = _slidingExpiration });
+
+        public TValue GetOrAdd(TKey key, TValue lazyTask, CacheEntryOptions options)
         {
+            if (options == null)
+            {
+                throw new ArgumentNullException(nameof(options));
+            }
             var entry = _memoryCache.CreateEntry(key);
             return _memoryCache.GetOrCreate(
                 _keySerializer.SerializeToString(key),
                 e =>
                 {
-                    e.SlidingExpiration = _slidingExpiration;
+                    e.AbsoluteExpiration = options.AbsoluteExpiration;
+                    e.AbsoluteExpirationRelativeToNow = options.AbsoluteExpirationRelativeToNow;
+                    e.SlidingExpiration = options.SlidingExpiration;
+                    e.Value = lazyTask;
                     return lazyTask;
                 });
         }
@@ -54,11 +64,21 @@ namespace DotQuery.Extensions
             }
         }
 
-        public void Set(TKey key, TValue value)
-        {
-            string keyAsString = _keySerializer.SerializeToString(key);
-            _memoryCache.Set(keyAsString, value, new MemoryCacheEntryOptions { SlidingExpiration = _slidingExpiration });
-        }
+        public void Set(TKey key, TValue value) => Set(key, value, new CacheEntryOptions { SlidingExpiration = _slidingExpiration });
 
+        public void Set(TKey key, TValue value, CacheEntryOptions options)
+        {
+            if (options == null)
+            {
+                throw new ArgumentNullException(nameof(options));
+            }
+            string keyAsString = _keySerializer.SerializeToString(key);
+            _memoryCache.Set(keyAsString, value, new MemoryCacheEntryOptions
+            {
+                AbsoluteExpiration = options.AbsoluteExpiration,
+                AbsoluteExpirationRelativeToNow = options.AbsoluteExpirationRelativeToNow,
+                SlidingExpiration = options.SlidingExpiration
+            });
+        }
     }
 }

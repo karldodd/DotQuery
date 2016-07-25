@@ -6,7 +6,11 @@
     "authors": [ "karldodd", "qqbuby" ],
     "tags": [ "dotquery", "query", "cache", "result", "async", "extensions", "webapi" ],
     "projectUrl": "https://github.com/karldodd/DotQuery",
-    "licenseUrl": ""
+    "licenseUrl": "",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/karldodd/DotQuery"
+    }
   },
   "copyright": "Copyright @  2013",
   "frameworks": {

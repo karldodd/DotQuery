@@ -1,4 +1,4 @@
-﻿{
+{
   "title": "DotQuery.Core",
   "version": "1.2.1",
   "description": "Core libs of DotQuery, a lightweight query result caching framework for .NET",
