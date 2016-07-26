@@ -8,13 +8,13 @@ namespace DotQuery.Extensions
     public class MemoryCacheBasedQueryCache<TKey, TValue> : IQueryCache<TKey, TValue>
     {
         private readonly IKeySerializer<TKey> _keySerializer;
-        private readonly TimeSpan _slidingExpiration;
+        private readonly CacheEntryOptions _slidingExpirationOptions;
         private readonly MemoryCache _memoryCache = new MemoryCache(new MemoryCacheOptions());
 
         public MemoryCacheBasedQueryCache(IKeySerializer<TKey> keySerializer, TimeSpan slidingExpiration)
         {
-            this._keySerializer = keySerializer;
-            this._slidingExpiration = slidingExpiration;
+            _keySerializer = keySerializer;
+            _slidingExpirationOptions = new CacheEntryOptions { SlidingExpiration = slidingExpiration };
         }
 
         public void Trim()
@@ -27,7 +27,7 @@ namespace DotQuery.Extensions
             _memoryCache.Compact(100);
         }
 
-        public TValue GetOrAdd(TKey key, TValue lazyTask) => GetOrAdd(key, lazyTask, new CacheEntryOptions { SlidingExpiration = _slidingExpiration });
+        public TValue GetOrAdd(TKey key, TValue lazyTask) => GetOrAdd(key, lazyTask, _slidingExpirationOptions);
 
         public TValue GetOrAdd(TKey key, TValue lazyTask, CacheEntryOptions options)
         {
@@ -64,7 +64,7 @@ namespace DotQuery.Extensions
             }
         }
 
-        public void Set(TKey key, TValue value) => Set(key, value, new CacheEntryOptions { SlidingExpiration = _slidingExpiration });
+        public void Set(TKey key, TValue value) => Set(key, value, _slidingExpirationOptions);
 
         public void Set(TKey key, TValue value, CacheEntryOptions options)
         {

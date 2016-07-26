@@ -1,6 +1,6 @@
 {
   "title": "DotQuery.Core",
-  "version": "1.2.1",
+  "version": "1.3.0",
   "description": "Core libs of DotQuery, a lightweight query result caching framework for .NET",
   "packOptions": {
     "owners": [ "karldodd" ],
