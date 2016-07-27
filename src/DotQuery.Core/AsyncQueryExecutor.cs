@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using DotQuery.Core.Async;
 using DotQuery.Core.Caches;
-using DotQuery.Core.Queries;
 
 namespace DotQuery.Core
 {
@@ -31,14 +30,7 @@ namespace DotQuery.Core
         /// <returns>The task object representing the asynchronous operation</returns>
         public Task<TResult> QueryAsync(TQuery query)
         {
-            var typedQuery = query as QueryBase; //todo: remove this
-
-            if (typedQuery != null)
-            {
-                return this.QueryAsync(query, typedQuery.QueryOptions);
-            }
-
-            return this.QueryAsync(query, QueryOptions.Default);
+            return this.QueryAsync(query, EntryOptions.Default);
         }
 
         /// <summary>
@@ -47,31 +39,14 @@ namespace DotQuery.Core
         /// <param name="query">The query to be executed</param>
         /// <param name="options">The cache policy options.</param>
         /// <returns>The task object representing the asynchronous operation</returns>
-        public Task<TResult> QueryAsync(TQuery query, CacheEntryOptions options)
-        {
-            var lazyTask = (AsyncLazy<TResult>)null;
-            if (!m_queryTaskCache.TryGet(query, out lazyTask))
-            {
-                lazyTask = new AsyncLazy<TResult>(() => DoQueryAsync(query));
-                m_queryTaskCache.Set(query, lazyTask, options);
-            }
-            return lazyTask.Value;
-        }
-
-        /// <summary>
-        /// Execute the given query as an asynchronous operation.
-        /// </summary>
-        /// <param name="query">The query to be executed</param>
-        /// <param name="queryOptions">Query options to use for this query</param>
-        /// <returns>The task object representing the asynchronous operation</returns>
-        public Task<TResult> QueryAsync(TQuery query, QueryOptions queryOptions)
+        public Task<TResult> QueryAsync(TQuery query, EntryOptions options)
         {
             Task<TResult> queryTask = null;
-            if ((queryOptions & QueryOptions.LookupCache) == QueryOptions.LookupCache)
+            if ((options.Behaviors & EntryBehaviors.LookupCache) == EntryBehaviors.LookupCache)
             {
-                if ((queryOptions & QueryOptions.SaveToCache) == QueryOptions.SaveToCache)
+                if ((options.Behaviors & EntryBehaviors.SaveToCache) == EntryBehaviors.SaveToCache)
                 {
-                    queryTask = m_queryTaskCache.GetOrAdd(query, new AsyncLazy<TResult>(() => DoQueryAsync(query))).Value;
+                    queryTask = m_queryTaskCache.GetOrAdd(query, new AsyncLazy<TResult>(() => DoQueryAsync(query)), options).Value;
                 }
                 else
                 {
@@ -88,9 +63,10 @@ namespace DotQuery.Core
                 }
 
                 //re-query if the task is canceld or failed.
-                if ((queryTask.IsFaulted || queryTask.IsCanceled) && (queryOptions & QueryOptions.ReQueryWhenErrorCached) == QueryOptions.ReQueryWhenErrorCached)
+                if ((queryTask.IsFaulted || queryTask.IsCanceled) && (options.Behaviors & EntryBehaviors.ReQueryWhenErrorCached) == EntryBehaviors.ReQueryWhenErrorCached)
                 {
-                    this.QueryAsync(query, queryOptions ^ QueryOptions.LookupCache);
+                    options.Behaviors ^= EntryBehaviors.LookupCache;
+                    this.QueryAsync(query, options);
                 }
 
                 //query is cached, just await the result
@@ -98,10 +74,10 @@ namespace DotQuery.Core
             }
             else
             {
-                if ((queryOptions & QueryOptions.SaveToCache) == QueryOptions.SaveToCache)
+                if ((options.Behaviors & EntryBehaviors.SaveToCache) == EntryBehaviors.SaveToCache)
                 {
                     var newQueryTask = new AsyncLazy<TResult>(() => DoQueryAsync(query));
-                    m_queryTaskCache.Set(query, newQueryTask);
+                    m_queryTaskCache.Set(query, newQueryTask, options);
                     return newQueryTask.Value;
                 }
                 else

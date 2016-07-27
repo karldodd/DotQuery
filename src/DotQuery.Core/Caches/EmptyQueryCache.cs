@@ -37,12 +37,12 @@
             return false;
         }
 
-        public TValue GetOrAdd(TKey key, TValue lazyTask, CacheEntryOptions options)
+        public TValue GetOrAdd(TKey key, TValue lazyTask, EntryOptions options)
         {
             return lazyTask;
         }
 
-        public void Set(TKey key, TValue value, CacheEntryOptions options)
+        public void Set(TKey key, TValue value, EntryOptions options)
         {
         }
     }

@@ -51,8 +51,8 @@ namespace DotQuery.Core.Caches
             return m_dictionary.TryGetValue(key, out value);
         }
 
-        public TValue GetOrAdd(TKey key, TValue lazyTask, CacheEntryOptions options) => GetOrAdd(key, lazyTask);
+        public TValue GetOrAdd(TKey key, TValue lazyTask, EntryOptions options) => GetOrAdd(key, lazyTask);
 
-        public void Set(TKey key, TValue value, CacheEntryOptions options) => Set(key, value);
+        public void Set(TKey key, TValue value, EntryOptions options) => Set(key, value);
     }
 }

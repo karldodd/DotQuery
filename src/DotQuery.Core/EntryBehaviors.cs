@@ -6,7 +6,7 @@ namespace DotQuery.Core
     /// Options to be set about how the underlying cache should do with the given query
     /// </summary>
     [Flags]
-    public enum QueryOptions
+    public enum EntryBehaviors
     {
         /// <summary>
         /// The query does nothing related to the cache (raw execution every time)

@@ -27,7 +27,7 @@ namespace DotQuery.Extensions
             m_dictionary[key] = value;
         }
 
-        public void Set(TKey key, TResult value, CacheEntryOptions options) => Set(key, value);
+        public void Set(TKey key, TResult value, EntryOptions options) => Set(key, value);
 
         public void Trim()
         {
@@ -44,6 +44,6 @@ namespace DotQuery.Extensions
             return m_dictionary.GetOrAdd(key, lazyTask);
         }
 
-        public TResult GetOrAdd(TKey key, TResult lazyTask, CacheEntryOptions options) => GetOrAdd(key, lazyTask);
+        public TResult GetOrAdd(TKey key, TResult lazyTask, EntryOptions options) => GetOrAdd(key, lazyTask);
     }
 }

@@ -14,6 +14,11 @@ namespace DotQuery.Core.Test
         private TimeSpan m_delayTime;
         private AsyncQueryExecutor<AddQuery, int> m_exec;
 
+        /// <summary>
+        /// Save result/task to the cache when the query has been executed or is being executed
+        /// </summary>
+        private readonly EntryOptions SaveToCache = new EntryOptions { Behaviors = EntryBehaviors.SaveToCache, SlidingExpiration = TimeSpan.FromMinutes(1) };
+
         private static TimeSpan TimeCost(Func<Task> a)
         {
             Stopwatch sw = Stopwatch.StartNew();
@@ -43,13 +48,19 @@ namespace DotQuery.Core.Test
 
         public TestQueryExecutor()
         {
-            Init();
+            m_delayTime = TimeSpan.FromMilliseconds(100);
+            m_exec = new AddAsyncQueryExecutor(m_delayTime);
         }
 
-        public void Init()
+
+        [Fact]
+        public void TestDefaultKeySerializer()
         {
-            m_delayTime = TimeSpan.FromMilliseconds(200);
-            m_exec = new AddAsyncQueryExecutor(m_delayTime);
+            var q1 = new AddQuery { Left = 1, Right = 2 };
+            var q2 = new AddQuery { Left = 1, Right = 2 };
+
+            var keySer = new DefaultKeySerializer<AddQuery>();
+            Assert.Equal(keySer.SerializeToString(q1), keySer.SerializeToString(q2));
         }
 
         [Fact]
@@ -66,14 +77,14 @@ namespace DotQuery.Core.Test
             Assert.True(
                 TimeCost(async () => { Assert.Equal(3, await m_exec.QueryAsync(q2)); })
                 <=
-                TimeSpan.FromMilliseconds(10));  //well, a cache hit
+                TimeSpan.FromMilliseconds(50), "Should hit cache");  //well, a cache hit
         }
 
         [Fact]
         public void TestQueryOptions()
         {
             var q1 = new AddQuery { Left = 1, Right = 2 };
-            var q2 = new AddQuery { Left = 1, Right = 2, QueryOptions = QueryOptions.None };
+            var q2 = new AddQuery { Left = 1, Right = 2 };
 
             Assert.True(
                 TimeCost(async () => { Assert.Equal(3, await m_exec.QueryAsync(q1)); })
@@ -81,7 +92,7 @@ namespace DotQuery.Core.Test
                 m_delayTime);
 
             Assert.True(
-                TimeCost(async () => { Assert.Equal(3, await m_exec.QueryAsync(q2)); })
+                TimeCost(async () => { Assert.Equal(3, await m_exec.QueryAsync(q2, EntryOptions.Empty)); })
                 >=
                 m_delayTime);  //well, should not hit
         }
@@ -90,7 +101,7 @@ namespace DotQuery.Core.Test
         public void TestQueryOptions2()
         {
             var q1 = new AddQuery { Left = 1, Right = 2 };
-            var q2 = new AddQuery { Left = 1, Right = 2, QueryOptions = QueryOptions.SaveToCache };
+            var q2 = new AddQuery { Left = 1, Right = 2 };
 
             Assert.True(
                 TimeCost(async () => { Assert.Equal(3, await m_exec.QueryAsync(q1)); })
@@ -98,7 +109,7 @@ namespace DotQuery.Core.Test
                 m_delayTime);
 
             Assert.True(
-                TimeCost(async () => { Assert.Equal(3, await m_exec.QueryAsync(q2)); })
+                TimeCost(async () => { Assert.Equal(3, await m_exec.QueryAsync(q2, SaveToCache)); })
                 >=
                 m_delayTime);  //well, should not hit
         }
@@ -106,11 +117,11 @@ namespace DotQuery.Core.Test
         [Fact]
         public void TestQueryOptions3()
         {
-            var q1 = new AddQuery { Left = 1, Right = 2, QueryOptions = QueryOptions.SaveToCache };
+            var q1 = new AddQuery { Left = 1, Right = 2 };
             var q2 = new AddQuery { Left = 1, Right = 2 };
 
             Assert.True(
-                TimeCost(async () => { Assert.Equal(3, await m_exec.QueryAsync(q1)); })
+                TimeCost(async () => { Assert.Equal(3, await m_exec.QueryAsync(q1, SaveToCache)); })
                 >=
                 m_delayTime, "Should take longer");
 
@@ -138,10 +149,10 @@ namespace DotQuery.Core.Test
             var q1 = new AddQuery { Left = int.MaxValue, Right = int.MaxValue };
 
             //use cached failed task
-            var q2 = new AddQuery { Left = int.MaxValue, Right = int.MaxValue, QueryOptions = (QueryOptions)(QueryOptions.Default - QueryOptions.ReQueryWhenErrorCached) };
+            var q2 = new AddQuery { Left = int.MaxValue, Right = int.MaxValue }; //, Options = new EntryOptions { Behaviors = (EntryBehaviors)(EntryBehaviors.Default - EntryBehaviors.ReQueryWhenErrorCached) } };
 
             Assert.True(TryCatchException<OverflowException>(() => TimeCost(async () => { await m_exec.QueryAsync(q1); })));
-            Assert.True(TryCatchException<OverflowException>(() => TimeCost(async () => { await m_exec.QueryAsync(q2); })));
+            Assert.True(TryCatchException<OverflowException>(() => TimeCost(async () => { await m_exec.QueryAsync(q2, new EntryOptions { Behaviors = (EntryBehaviors)(EntryBehaviors.Default - EntryBehaviors.ReQueryWhenErrorCached) }); })));
 
             Assert.Equal(1, ((AddAsyncQueryExecutor)m_exec).RealCalcCount);
         }
@@ -157,7 +168,7 @@ namespace DotQuery.Core.Test
                 >=
                 m_delayTime, "Should take longer");
 
-            Assert.True(
+            Assert.True(    //TODO Test failure.
                 TimeCost(async () => { Assert.Equal(3, await m_exec.QueryAsync(q1)); })
                 <=
                 TimeSpan.FromMilliseconds(50), "Should hit cache");  //well, a cache hit
@@ -181,29 +192,22 @@ namespace DotQuery.Core.Test
         }
 
         [Fact]
-        public void TestObjectCacheBehavior()
-        {
-            //CacheItemPolicy policy = new CacheItemPolicy() { SlidingExpiration = TimeSpan.FromMinutes(1) };
-            //Assert.Equal(null, MemoryCache.Default.AddOrGetExisting(new CacheItem("test", "one"), policy).Value);
-            //Assert.Equal("test", MemoryCache.Default.AddOrGetExisting(new CacheItem("test", "two"), policy).Key);
-            //Assert.Equal("one", MemoryCache.Default.AddOrGetExisting(new CacheItem("test", "two"), policy).Value);
-            //Assert.Equal("one", MemoryCache.Default.AddOrGetExisting("test", "three", policy));
-        }
-
-        [Fact]
         public void TestCacheEntryOptions()
         {
             var cache = new MemoryCacheBasedQueryCache<AddQuery, AsyncLazy<int>>(new DefaultKeySerializer<AddQuery>(), TimeSpan.FromMinutes(1));
             m_exec = new AddAsyncQueryExecutor(cache, m_delayTime);
             var q1 = new AddQuery { Left = 1, Right = 2 };
-            m_exec.QueryAsync(q1, new CacheEntryOptions { SlidingExpiration = TimeSpan.FromMinutes(2) });
+            var options = new EntryOptions { SlidingExpiration = TimeSpan.FromMinutes(2) };
+
+            Assert.Equal(EntryBehaviors.Default, options.Behaviors);
+
             Assert.True(
-                TimeCost(async () => { Assert.Equal(3, await m_exec.QueryAsync(q1)); })
+                TimeCost(async () => { Assert.Equal(3, await m_exec.QueryAsync(q1, options)); })
                 >=
                 m_delayTime, "Should take longer");
 
             Assert.True(
-                TimeCost(async () => { Assert.Equal(3, await m_exec.QueryAsync(q1)); })
+                TimeCost(async () => { Assert.Equal(3, await m_exec.QueryAsync(q1, options)); }) //TODO
                 <=
                 TimeSpan.FromMilliseconds(50), "Should hit cache");  //well, a cache hit
         }
