@@ -3,7 +3,7 @@
 namespace DotQuery.Core.Caches
 {
     /// <summary>
-    /// A simple but working in-memory cache (backed by Dictionary<TKey,TValue>)
+    /// A simple but working in-memory cache (backed by Dictionary{TKey,TValue})
     /// </summary>
     /// <remarks>
     /// This query cache implementation is not thread safe.

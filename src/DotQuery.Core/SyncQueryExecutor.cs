@@ -9,7 +9,7 @@ namespace DotQuery.Core
     /// </summary>
     /// <typeparam name="TQuery">Type of the query object</typeparam>
     /// <typeparam name="TResult">Result type</typeparam>
-    [Obsolete("Please use AsyncQueryExecutor<TQuery, TResult> instead.")]
+    [Obsolete("Please use AsyncQueryExecutor<TQuery, TResult> instead.", true)]
     public abstract class SyncQueryExecutor<TQuery, TResult>
     {
         private readonly IQueryCache<TQuery, Lazy<TResult>> m_queryTaskCache;

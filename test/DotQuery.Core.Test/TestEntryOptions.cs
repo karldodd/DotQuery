@@ -7,6 +7,18 @@ namespace DotQuery.Core.Test
     public class TestEntryOptions
     {
         [Fact]
+        public void TestNewOptions()
+        {
+            var options = new EntryOptions();
+
+            Assert.Equal(options.Behaviors, EntryBehaviors.Default);
+
+            Assert.Null(options.AbsoluteExpiration);
+            Assert.Null(options.AbsoluteExpirationRelativeToNow);
+            Assert.Null(options.SlidingExpiration);
+        }
+
+        [Fact]
         public void TestEmptyOptions()
         {
             var options = EntryOptions.Empty;
@@ -27,7 +39,7 @@ namespace DotQuery.Core.Test
 
             Assert.Null(options.AbsoluteExpiration);
             Assert.Null(options.AbsoluteExpirationRelativeToNow);
-            Assert.Null(options.SlidingExpiration);
+            Assert.Equal(options.SlidingExpiration, TimeSpan.FromMinutes(30));
 
             Assert.True((options.Behaviors & EntryBehaviors.LookupCache) == EntryBehaviors.LookupCache);
             Assert.True((options.Behaviors & EntryBehaviors.SaveToCache) == EntryBehaviors.SaveToCache);
@@ -37,10 +49,10 @@ namespace DotQuery.Core.Test
             {
                 AbsoluteExpiration = options.AbsoluteExpiration,
                 AbsoluteExpirationRelativeToNow = options.AbsoluteExpirationRelativeToNow,
-                SlidingExpiration = options == EntryOptions.Default ? TimeSpan.FromMinutes(1) : options.SlidingExpiration
+                SlidingExpiration = options.SlidingExpiration
             };
 
-            Assert.Equal(cacheOptions.SlidingExpiration, TimeSpan.FromMinutes(1));
+            Assert.Equal(cacheOptions.SlidingExpiration, TimeSpan.FromMinutes(30));
             Assert.Null(cacheOptions.AbsoluteExpiration);
             Assert.Null(cacheOptions.AbsoluteExpirationRelativeToNow);
         }

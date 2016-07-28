@@ -2,6 +2,9 @@
 
 namespace DotQuery.Core
 {
+    /// <summary>
+    /// Define a cache entry policy options.
+    /// </summary>
     public class EntryOptions
     {
         /// <summary>
@@ -10,9 +13,9 @@ namespace DotQuery.Core
         public static readonly EntryOptions Empty = new EntryOptions { Behaviors = EntryBehaviors.None };
 
         /// <summary>
-        /// The default smart behavior: the query will lookup and save to cache, and re-execute the query if error is cached
+        /// The default smart behavior: the query will lookup and save to cache with 30 minutes as the default sliding expiration, and re-execute the query if error is cached.
         /// </summary>
-        public static readonly EntryOptions Default = new EntryOptions { Behaviors = EntryBehaviors.Default };
+        public static readonly EntryOptions Default = new EntryOptions { Behaviors = EntryBehaviors.Default, SlidingExpiration = TimeSpan.FromMinutes(30) };
 
         private DateTimeOffset? _absoluteExpiration;
         private TimeSpan? _absoluteExpirationRelativeToNow;

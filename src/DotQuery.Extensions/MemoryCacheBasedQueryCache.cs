@@ -1,5 +1,4 @@
-﻿using System;
-using DotQuery.Core;
+﻿using DotQuery.Core;
 using DotQuery.Core.Caches;
 using Microsoft.Extensions.Caching.Memory;
 
@@ -8,13 +7,11 @@ namespace DotQuery.Extensions
     public class MemoryCacheBasedQueryCache<TKey, TValue> : IQueryCache<TKey, TValue>
     {
         private readonly IKeySerializer<TKey> _keySerializer;
-        private readonly TimeSpan _slidingExpiration;
         private readonly MemoryCache _memoryCache = new MemoryCache(new MemoryCacheOptions());
 
-        public MemoryCacheBasedQueryCache(IKeySerializer<TKey> keySerializer, TimeSpan slidingExpiration)
+        public MemoryCacheBasedQueryCache(IKeySerializer<TKey> keySerializer)
         {
             _keySerializer = keySerializer;
-            _slidingExpiration = slidingExpiration;
         }
 
         public void Trim()
@@ -36,7 +33,7 @@ namespace DotQuery.Extensions
                 {
                     e.AbsoluteExpiration = options.AbsoluteExpiration;
                     e.AbsoluteExpirationRelativeToNow = options.AbsoluteExpirationRelativeToNow;
-                    e.SlidingExpiration = CalculateSlidingExpiration(options);
+                    e.SlidingExpiration = options.SlidingExpiration;
                     return lazyTask;
                 });
         }
@@ -65,18 +62,13 @@ namespace DotQuery.Extensions
             {
                 AbsoluteExpiration = options.AbsoluteExpiration,
                 AbsoluteExpirationRelativeToNow = options.AbsoluteExpirationRelativeToNow,
-                SlidingExpiration = CalculateSlidingExpiration(options)
+                SlidingExpiration = options.SlidingExpiration
             });
         }
 
         private string GetSerializeKey(TKey key)
         {
             return _keySerializer.SerializeToString(key);
-        }
-
-        private TimeSpan? CalculateSlidingExpiration(EntryOptions options)
-        {
-            return options == EntryOptions.Default ? _slidingExpiration : options.SlidingExpiration;
         }
     }
 }
