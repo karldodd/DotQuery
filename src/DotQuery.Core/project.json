@@ -1,6 +1,6 @@
 {
   "title": "DotQuery.Core",
-  "version": "1.3.0-beta",
+  "version": "1.3.0-beta2",
   "description": "Core libs of DotQuery, a lightweight query result caching framework for .NET",
   "packOptions": {
     "owners": [ "karldodd" ],
@@ -16,15 +16,26 @@
     "xmlDoc": true
   },
   "frameworks": {
+    "net451": {
+      "dependencies": {
+        "System.Runtime": "4.0.10",
+        "System.Collections": "4.0.0",
+        "System.Threading": "4.0.0",
+        "System.Threading.Tasks": "4.0.0",
+        "System.Linq": "4.0.0"
+      }
+    },
     "netstandard1.0": {
       "imports": "dnxcore50",
       "dependencies": {
         "System.Collections": "4.0.11",
         "System.Threading": "4.0.11",
         "System.Threading.Tasks": "4.0.11",
-        "Newtonsoft.Json": "7.0.1",
         "System.Linq": "4.1.0"
       }
     }
+  },
+  "dependencies": {
+    "Newtonsoft.Json": "7.0.1"
   }
 }
