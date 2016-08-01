@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
+using DotQuery.Core;
 using DotQuery.Core.Caches;
 
 namespace DotQuery.Extensions
@@ -26,6 +27,8 @@ namespace DotQuery.Extensions
             m_dictionary[key] = value;
         }
 
+        public void Set(TKey key, TResult value, EntryOptions options) => Set(key, value);
+
         public void Trim()
         {
             m_dictionary.Clear();
@@ -40,5 +43,7 @@ namespace DotQuery.Extensions
         {
             return m_dictionary.GetOrAdd(key, lazyTask);
         }
+
+        public TResult GetOrAdd(TKey key, TResult lazyTask, EntryOptions options) => GetOrAdd(key, lazyTask);
     }
 }

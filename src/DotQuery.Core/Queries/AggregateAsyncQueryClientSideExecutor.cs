@@ -39,7 +39,7 @@ namespace DotQuery.Core.Queries
                 throw new NotSupportedException("AggregateQueryClientSideExecutor only handles client-side query aggreation");
             }
 
-            List<Task<TResult>> taskList = aq.Queries.Cast<TQuery>().Select(childQ => _mChildAsyncQueryExecutor.QueryAsync(childQ, aq.QueryOptions)).ToList(); //query all queries inside the Aggregated Query
+            List<Task<TResult>> taskList = aq.Queries.Cast<TQuery>().Select(childQ => _mChildAsyncQueryExecutor.QueryAsync(childQ, EntryOptions.Default)).ToList(); //query all queries inside the Aggregated Query
             var queryList = aq.Queries.ToList();
 
             //Could use Task.WhenAll() instead if we don't want 'OnSingleQueryFinished' event

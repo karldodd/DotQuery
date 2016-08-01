@@ -3,7 +3,7 @@
 namespace DotQuery.Core.Caches
 {
     /// <summary>
-    /// A simple but working in-memory cache (backed by Dictionary<TKey,TValue>)
+    /// A simple but working in-memory cache (backed by Dictionary{TKey,TValue})
     /// </summary>
     /// <remarks>
     /// This query cache implementation is not thread safe.
@@ -50,5 +50,9 @@ namespace DotQuery.Core.Caches
         {
             return m_dictionary.TryGetValue(key, out value);
         }
+
+        public TValue GetOrAdd(TKey key, TValue lazyTask, EntryOptions options) => GetOrAdd(key, lazyTask);
+
+        public void Set(TKey key, TValue value, EntryOptions options) => Set(key, value);
     }
 }

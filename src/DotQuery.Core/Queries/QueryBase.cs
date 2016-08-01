@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Newtonsoft.Json;
-using DotQuery.Core;
 
 namespace DotQuery.Core.Queries
 {
@@ -16,13 +12,14 @@ namespace DotQuery.Core.Queries
         {
             this.ExportBinary = exportQuery;
             this.CreateTime = DateTime.Now;
-            this.QueryOptions = QueryOptions.Default;
+            //this.QueryOptions = EntryBehaviors.Default;
         }
 
         public bool ExportBinary { get; protected set; }
 
+        [Obsolete("Deprecated!", true)]
         [JsonIgnore]
-        public QueryOptions QueryOptions { get; set; }
+        public EntryBehaviors QueryOptions { get; set; }
 
         /// <summary>
         /// Should not involve this property in Hash/Equal stuff because it will break query result caching

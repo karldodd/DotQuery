@@ -1,6 +1,5 @@
 ﻿using System;
 using DotQuery.Core.Caches;
-using DotQuery.Core.Queries;
 
 namespace DotQuery.Core
 {
@@ -10,6 +9,7 @@ namespace DotQuery.Core
     /// </summary>
     /// <typeparam name="TQuery">Type of the query object</typeparam>
     /// <typeparam name="TResult">Result type</typeparam>
+    [Obsolete("Please use AsyncQueryExecutor<TQuery, TResult> instead.", true)]
     public abstract class SyncQueryExecutor<TQuery, TResult>
     {
         private readonly IQueryCache<TQuery, Lazy<TResult>> m_queryTaskCache;
@@ -30,29 +30,22 @@ namespace DotQuery.Core
         /// <returns>The result of the given query</returns>
         public TResult QuerySync(TQuery query)
         {
-            var typedQuery = query as QueryBase; //todo: remove this
-
-            if (typedQuery != null)
-            {
-                return this.QuerySync(query, typedQuery.QueryOptions);
-            }
-
-            return this.QuerySync(query, QueryOptions.Default);
+            return this.QuerySync(query, EntryOptions.Default);
         }
 
         /// <summary>
         /// Execute the given query as an synchronous operation.
         /// </summary>
         /// <param name="query">The query to be executed</param>
-        /// <param name="queryOptions">Query options to use for this query</param>
+        /// <param name="options">Query options to use for this query</param>
         /// <returns>The result of the given query</returns>
-        public TResult QuerySync(TQuery query, QueryOptions queryOptions)
+        public TResult QuerySync(TQuery query, EntryOptions options)
         {
-            if ((queryOptions & QueryOptions.LookupCache) == QueryOptions.LookupCache)
+            if ((options.Behaviors & EntryBehaviors.LookupCache) == EntryBehaviors.LookupCache)
             {
-                if ((queryOptions & QueryOptions.SaveToCache) == QueryOptions.SaveToCache)
+                if ((options.Behaviors & EntryBehaviors.SaveToCache) == EntryBehaviors.SaveToCache)
                 {
-                    return m_queryTaskCache.GetOrAdd(query, new Lazy<TResult>(() => DoQuerySync(query))).Value;
+                    return m_queryTaskCache.GetOrAdd(query, new Lazy<TResult>(() => DoQuerySync(query)), options).Value;
                 }
                 else
                 {
@@ -69,10 +62,10 @@ namespace DotQuery.Core
             }
             else
             {
-                if ((queryOptions & QueryOptions.SaveToCache) == QueryOptions.SaveToCache)
+                if ((options.Behaviors & EntryBehaviors.SaveToCache) == EntryBehaviors.SaveToCache)
                 {
                     var newQueryTask = new Lazy<TResult>(() => DoQuerySync(query));
-                    m_queryTaskCache.Set(query, newQueryTask);
+                    m_queryTaskCache.Set(query, newQueryTask, options);
                     return newQueryTask.Value;
                 }
                 else

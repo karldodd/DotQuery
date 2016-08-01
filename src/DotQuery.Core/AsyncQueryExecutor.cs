@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using DotQuery.Core.Async;
 using DotQuery.Core.Caches;
-using DotQuery.Core.Queries;
 
 namespace DotQuery.Core
 {
@@ -31,59 +30,54 @@ namespace DotQuery.Core
         /// <returns>The task object representing the asynchronous operation</returns>
         public Task<TResult> QueryAsync(TQuery query)
         {
-            var typedQuery = query as QueryBase; //todo: remove this
-
-            if (typedQuery != null)
-            {
-                return this.QueryAsync(query, typedQuery.QueryOptions);
-            }
-
-            return this.QueryAsync(query, QueryOptions.Default);
+            return this.QueryAsync(query, EntryOptions.Default);
         }
 
         /// <summary>
-        /// Execute the given query as an asynchronous operation.
+        /// Execute the given query as an asynchronous operation with a specified cache policy.
         /// </summary>
         /// <param name="query">The query to be executed</param>
-        /// <param name="queryOptions">Query options to use for this query</param>
+        /// <param name="options">The cache policy options.</param>
         /// <returns>The task object representing the asynchronous operation</returns>
-        public Task<TResult> QueryAsync(TQuery query, QueryOptions queryOptions)
+        public Task<TResult> QueryAsync(TQuery query, EntryOptions options)
         {
             Task<TResult> queryTask = null;
-            if ((queryOptions & QueryOptions.LookupCache) == QueryOptions.LookupCache)
+            if ((options.Behaviors & EntryBehaviors.LookupCache) == EntryBehaviors.LookupCache)
             {
-                if ((queryOptions & QueryOptions.SaveToCache) == QueryOptions.SaveToCache)
+                if ((options.Behaviors & EntryBehaviors.SaveToCache) == EntryBehaviors.SaveToCache)
                 {
-                    queryTask = m_queryTaskCache.GetOrAdd(query, new AsyncLazy<TResult>(() => DoQueryAsync(query))).Value;
+                    queryTask = m_queryTaskCache.GetOrAdd(query, new AsyncLazy<TResult>(() => DoQueryAsync(query)), options).Value;
                 }
                 else
                 {
                     AsyncLazy<TResult> asyncLazyResult;
                     if (m_queryTaskCache.TryGet(query, out asyncLazyResult))
                     {
-                        queryTask = asyncLazyResult.Value;                        
+                        queryTask = asyncLazyResult.Value;
                     }
-                    else {
+                    else
+                    {
                         //no task cached, do it directly
                         return DoQueryAsync(query);
                     }
                 }
-                
+
                 //re-query if the task is canceld or failed.
-                if ((queryTask.IsFaulted || queryTask.IsCanceled) && (queryOptions & QueryOptions.ReQueryWhenErrorCached) == QueryOptions.ReQueryWhenErrorCached)
+                if ((queryTask.IsFaulted || queryTask.IsCanceled) && (options.Behaviors & EntryBehaviors.ReQueryWhenErrorCached) == EntryBehaviors.ReQueryWhenErrorCached)
                 {
-                    this.QueryAsync(query, queryOptions ^ QueryOptions.LookupCache);
+                    options.Behaviors ^= EntryBehaviors.LookupCache;
+                    this.QueryAsync(query, options);
                 }
 
                 //query is cached, just await the result
-                return queryTask;                
+                return queryTask;
             }
             else
             {
-                if ((queryOptions & QueryOptions.SaveToCache) == QueryOptions.SaveToCache)
+                if ((options.Behaviors & EntryBehaviors.SaveToCache) == EntryBehaviors.SaveToCache)
                 {
                     var newQueryTask = new AsyncLazy<TResult>(() => DoQueryAsync(query));
-                    m_queryTaskCache.Set(query, newQueryTask);
+                    m_queryTaskCache.Set(query, newQueryTask, options);
                     return newQueryTask.Value;
                 }
                 else
@@ -92,7 +86,7 @@ namespace DotQuery.Core
                 }
             }
         }
-        
+
         /// <summary>
         /// Execute the query in the real world (without cache read/write)
         /// </summary>

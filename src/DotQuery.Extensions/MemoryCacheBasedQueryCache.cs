@@ -1,43 +1,47 @@
-﻿using System;
-#if NET451 || DNX451
-using System.Runtime.Caching;
-#endif
+﻿using DotQuery.Core;
 using DotQuery.Core.Caches;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace DotQuery.Extensions
 {
-#if NET451 || DNX451
     public class MemoryCacheBasedQueryCache<TKey, TValue> : IQueryCache<TKey, TValue>
     {
-        private readonly IKeySerializer<TKey> m_keySerializer;
-        private readonly TimeSpan m_expirationSpan;
-        private MemoryCache m_objectCache = MemoryCache.Default;
+        private readonly IKeySerializer<TKey> _keySerializer;
+        private readonly MemoryCache _memoryCache = new MemoryCache(new MemoryCacheOptions());
 
-        public MemoryCacheBasedQueryCache(IKeySerializer<TKey> keySerializer, TimeSpan expirationSpan)
+        public MemoryCacheBasedQueryCache(IKeySerializer<TKey> keySerializer)
         {
-            this.m_keySerializer = keySerializer;
-            this.m_expirationSpan = expirationSpan;
+            _keySerializer = keySerializer;
         }
 
         public void Trim()
         {
-            m_objectCache.Trim(75);
+            _memoryCache.Compact(75);
         }
 
         public void Clear()
         {
-            m_objectCache.Trim(100);
+            _memoryCache.Compact(100);
         }
 
-        public TValue GetOrAdd(TKey key, TValue lazyTask)
+        public TValue GetOrAdd(TKey key, TValue lazyTask, EntryOptions options)
         {
-            object existingValue = m_objectCache.AddOrGetExisting(new CacheItem(m_keySerializer.SerializeToString(key), lazyTask), new CacheItemPolicy() { SlidingExpiration = m_expirationSpan }).Value;
-            return (TValue)(existingValue ?? lazyTask);
+            string serializeKey = GetSerializeKey(key);
+            return _memoryCache.GetOrCreate(
+                serializeKey,
+                e =>
+                {
+                    e.AbsoluteExpiration = options.AbsoluteExpiration;
+                    e.AbsoluteExpirationRelativeToNow = options.AbsoluteExpirationRelativeToNow;
+                    e.SlidingExpiration = options.SlidingExpiration;
+                    return lazyTask;
+                });
         }
 
         public bool TryGet(TKey key, out TValue value)
         {
-            object cached = m_objectCache.Get(m_keySerializer.SerializeToString(key));
+            string serializeKey = GetSerializeKey(key);
+            object cached = _memoryCache.Get(serializeKey);
 
             if (cached == null)
             {
@@ -51,13 +55,20 @@ namespace DotQuery.Extensions
             }
         }
 
-        public void Set(TKey key, TValue value)
+        public void Set(TKey key, TValue value, EntryOptions options)
         {
-            string keyAsString = m_keySerializer.SerializeToString(key);
-            m_objectCache.Set(new CacheItem(keyAsString, value), new CacheItemPolicy() { SlidingExpiration = m_expirationSpan });
-            m_objectCache[keyAsString] = value;
+            string serializeKey = GetSerializeKey(key);
+            _memoryCache.Set(serializeKey, value, new MemoryCacheEntryOptions
+            {
+                AbsoluteExpiration = options.AbsoluteExpiration,
+                AbsoluteExpirationRelativeToNow = options.AbsoluteExpirationRelativeToNow,
+                SlidingExpiration = options.SlidingExpiration
+            });
         }
 
+        private string GetSerializeKey(TKey key)
+        {
+            return _keySerializer.SerializeToString(key);
+        }
     }
-#endif
 }
