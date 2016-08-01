@@ -1,5 +1,5 @@
 {
-  "version": "1.3.0",
+  "version": "1.3.0-beta",
   "description": "Extension libs and utilities of DotQuery, a lightweight query result caching framework for .NET",
   "packOptions": {
     "owners": [ "karldodd" ],
