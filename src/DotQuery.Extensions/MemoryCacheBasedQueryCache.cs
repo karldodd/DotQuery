@@ -27,15 +27,19 @@ namespace DotQuery.Extensions
         public TValue GetOrAdd(TKey key, TValue lazyTask, EntryOptions options)
         {
             string serializeKey = GetSerializeKey(key);
-            return _memoryCache.GetOrCreate(
-                serializeKey,
-                e =>
+            TValue result;
+            if (!_memoryCache.TryGetValue(serializeKey, out result))
+            {
+                result = lazyTask;
+                var memoryEntryOptions = new MemoryCacheEntryOptions
                 {
-                    e.AbsoluteExpiration = options.AbsoluteExpiration;
-                    e.AbsoluteExpirationRelativeToNow = options.AbsoluteExpirationRelativeToNow;
-                    e.SlidingExpiration = options.SlidingExpiration;
-                    return lazyTask;
-                });
+                    AbsoluteExpiration = options.AbsoluteExpiration,
+                    AbsoluteExpirationRelativeToNow = options.AbsoluteExpirationRelativeToNow,
+                    SlidingExpiration = options.SlidingExpiration,
+                };
+                _memoryCache.Set(serializeKey, result, memoryEntryOptions);
+            }
+            return result;
         }
 
         public bool TryGet(TKey key, out TValue value)
