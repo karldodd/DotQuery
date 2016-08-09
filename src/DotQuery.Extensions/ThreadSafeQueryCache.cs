@@ -49,7 +49,8 @@ namespace DotQuery.Extensions
 
         public void Remove(TKey key)
         {
-            throw new NotSupportedException();
+            TResult result;
+            m_dictionary.TryRemove(key, out result);
         }
     }
 }
