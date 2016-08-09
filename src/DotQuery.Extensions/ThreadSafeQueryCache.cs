@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using DotQuery.Core;
 using DotQuery.Core.Caches;
@@ -45,5 +46,10 @@ namespace DotQuery.Extensions
         }
 
         public TResult GetOrAdd(TKey key, TResult lazyTask, EntryOptions options) => GetOrAdd(key, lazyTask);
+
+        public void Remove(TKey key)
+        {
+            throw new NotSupportedException();
+        }
     }
 }

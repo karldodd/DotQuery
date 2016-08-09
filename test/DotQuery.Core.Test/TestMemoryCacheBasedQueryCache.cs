@@ -29,5 +29,23 @@ namespace DotQuery.Core.Test
             Thread.Sleep(100);
             Assert.True(cache.TryGet("key", out val));
         }
+
+        [Fact]
+        public void TestRemove()
+        {
+            var cache = new MemoryCacheBasedQueryCache<string, int>(new DefaultKeySerializer<string>());
+
+            string testKey = "testKey";
+            int testValue = 1;
+            cache.Set(testKey, testValue, EntryOptions.Default);
+
+            int value;
+            Assert.True(cache.TryGet(testKey, out value));
+            Assert.Equal(testValue, value);
+
+            cache.Remove(testKey);
+
+            Assert.False(cache.TryGet(testKey, out testValue));
+        }
     }
 }
