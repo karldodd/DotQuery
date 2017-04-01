@@ -1,4 +1,6 @@
-﻿namespace DotQuery.Core.Caches
+﻿using System;
+
+namespace DotQuery.Core.Caches
 {
     /// <summary>
     /// A query cache that never caches anything
@@ -43,6 +45,10 @@
         }
 
         public void Set(TKey key, TValue value, EntryOptions options)
+        {
+        }
+
+        public void Remove(TKey key)
         {
         }
     }

@@ -8,6 +8,8 @@
 
         void Set(TKey key, TValue value, EntryOptions options);
 
+        void Remove(TKey key);
+
         void Trim();
 
         void Clear();

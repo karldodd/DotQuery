@@ -1,4 +1,5 @@
-﻿using DotQuery.Core;
+﻿using System;
+using DotQuery.Core;
 using DotQuery.Core.Caches;
 using Microsoft.Extensions.Caching.Memory;
 
@@ -68,6 +69,12 @@ namespace DotQuery.Extensions
                 AbsoluteExpirationRelativeToNow = options.AbsoluteExpirationRelativeToNow,
                 SlidingExpiration = options.SlidingExpiration
             });
+        }
+
+        public void Remove(TKey key)
+        {
+            string serializeKey = GetSerializeKey(key);
+            _memoryCache.Remove(key);
         }
 
         private string GetSerializeKey(TKey key)

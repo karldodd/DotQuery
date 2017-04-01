@@ -54,5 +54,10 @@ namespace DotQuery.Core.Caches
         public TValue GetOrAdd(TKey key, TValue lazyTask, EntryOptions options) => GetOrAdd(key, lazyTask);
 
         public void Set(TKey key, TValue value, EntryOptions options) => Set(key, value);
+
+        public void Remove(TKey key)
+        {
+            m_dictionary.Remove(key);
+        }
     }
 }
