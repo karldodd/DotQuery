@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>Core libs of DotQuery, a lightweight query result caching framework for .NET</Description>
+    <Copyright>Copyright ©  2013</Copyright>
+    <AssemblyTitle>DotQuery.Core</AssemblyTitle>
+    <VersionPrefix>1.4.0</VersionPrefix>
+    <TargetFrameworks>net451;netstandard1.3</TargetFrameworks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <AssemblyName>DotQuery.Core</AssemblyName>
+    <PackageId>DotQuery.Core</PackageId>
+    <PackageTags>dotquery;query;cache;memorycache;result;async</PackageTags>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/karldodd/DotQuery</RepositoryUrl>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
+  </ItemGroup>
+
+</Project>
