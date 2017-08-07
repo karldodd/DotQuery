@@ -1,22 +1,17 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26114.2
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{15DEFAC2-FED2-4BB5-A28A-5075784FDB23}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A68A7BB6-5F02-458D-ADA1-E2667687C420}"
-	ProjectSection(SolutionItems) = preProject
-		global.json = global.json
-	EndProjectSection
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotQuery.Core", "src\DotQuery.Core\DotQuery.Core.csproj", "{F3FCE2CD-C6CB-4F0E-82F6-B53F287D7542}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "DotQuery.Core", "src\DotQuery.Core\DotQuery.Core.xproj", "{F3FCE2CD-C6CB-4F0E-82F6-B53F287D7542}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "DotQuery.Extensions", "src\DotQuery.Extensions\DotQuery.Extensions.xproj", "{D317409D-1C89-4C7B-A177-0BC0BE6E259D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotQuery.Extensions", "src\DotQuery.Extensions\DotQuery.Extensions.csproj", "{D317409D-1C89-4C7B-A177-0BC0BE6E259D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{C4240D33-C5D0-45BD-A3D2-284E3C6C9B8A}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "DotQuery.Core.Test", "test\DotQuery.Core.Test\DotQuery.Core.Test.xproj", "{65600EDD-13FC-4D1D-A24D-51BC5C24BE11}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotQuery.Core.Test", "test\DotQuery.Core.Test\DotQuery.Core.Test.csproj", "{65600EDD-13FC-4D1D-A24D-51BC5C24BE11}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
