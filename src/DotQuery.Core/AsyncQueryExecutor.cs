@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using DotQuery.Core.Async;
 using DotQuery.Core.Caches;
 
@@ -27,10 +28,11 @@ namespace DotQuery.Core
         /// Execute the given query as an asynchronous operation.
         /// </summary>
         /// <param name="query">The query to be executed</param>
+        /// <param name="cancellationToken"></param>
         /// <returns>The task object representing the asynchronous operation</returns>
-        public Task<TResult> QueryAsync(TQuery query)
+        public Task<TResult> QueryAsync(TQuery query, CancellationToken cancellationToken)
         {
-            return this.QueryAsync(query, EntryOptions.Default);
+            return this.QueryAsync(query, EntryOptions.Default, cancellationToken);
         }
 
         /// <summary>
@@ -38,15 +40,16 @@ namespace DotQuery.Core
         /// </summary>
         /// <param name="query">The query to be executed</param>
         /// <param name="options">The cache policy options.</param>
+        /// <param name="cancellationToken"></param>
         /// <returns>The task object representing the asynchronous operation</returns>
-        public Task<TResult> QueryAsync(TQuery query, EntryOptions options)
+        public Task<TResult> QueryAsync(TQuery query, EntryOptions options, CancellationToken cancellationToken)
         {
             Task<TResult> queryTask = null;
             if ((options.Behaviors & EntryBehaviors.LookupCache) == EntryBehaviors.LookupCache)
             {
                 if ((options.Behaviors & EntryBehaviors.SaveToCache) == EntryBehaviors.SaveToCache)
                 {
-                    queryTask = m_queryTaskCache.GetOrAdd(query, new AsyncLazy<TResult>(() => DoQueryAsync(query)), options).Value;
+                    queryTask = m_queryTaskCache.GetOrAdd(query, new AsyncLazy<TResult>(() => DoQueryAsync(query, cancellationToken)), options).Value;
                 }
                 else
                 {
@@ -58,7 +61,7 @@ namespace DotQuery.Core
                     else
                     {
                         //no task cached, do it directly
-                        return DoQueryAsync(query);
+                        return DoQueryAsync(query, cancellationToken);
                     }
                 }
 
@@ -66,7 +69,7 @@ namespace DotQuery.Core
                 if ((queryTask.IsFaulted || queryTask.IsCanceled) && (options.Behaviors & EntryBehaviors.ReQueryWhenErrorCached) == EntryBehaviors.ReQueryWhenErrorCached)
                 {
                     options.Behaviors ^= EntryBehaviors.LookupCache;
-                    this.QueryAsync(query, options);
+                    this.QueryAsync(query, options, cancellationToken);
                 }
 
                 //query is cached, just await the result
@@ -76,13 +79,13 @@ namespace DotQuery.Core
             {
                 if ((options.Behaviors & EntryBehaviors.SaveToCache) == EntryBehaviors.SaveToCache)
                 {
-                    var newQueryTask = new AsyncLazy<TResult>(() => DoQueryAsync(query));
+                    var newQueryTask = new AsyncLazy<TResult>(() => DoQueryAsync(query, cancellationToken));
                     m_queryTaskCache.Set(query, newQueryTask, options);
                     return newQueryTask.Value;
                 }
                 else
                 {
-                    return DoQueryAsync(query);
+                    return DoQueryAsync(query, cancellationToken);
                 }
             }
         }
@@ -91,7 +94,8 @@ namespace DotQuery.Core
         /// Execute the query in the real world (without cache read/write)
         /// </summary>
         /// <param name="query"></param>
+        /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        protected abstract Task<TResult> DoQueryAsync(TQuery query);
+        protected abstract Task<TResult> DoQueryAsync(TQuery query, CancellationToken cancellationToken);
     }
 }

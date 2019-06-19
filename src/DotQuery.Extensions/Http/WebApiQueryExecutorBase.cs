@@ -1,4 +1,5 @@
 ﻿using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using DotQuery.Core;
 using DotQuery.Core.Async;
@@ -19,7 +20,7 @@ namespace DotQuery.Extensions.Http
             m_apiPath = apiPath;
         }
 
-        protected override async Task<TResult> DoQueryAsync(TQuery query)
+        protected override async Task<TResult> DoQueryAsync(TQuery query, CancellationToken cancellationToken)
         {
             var postBody = GetPostBody(query);
 

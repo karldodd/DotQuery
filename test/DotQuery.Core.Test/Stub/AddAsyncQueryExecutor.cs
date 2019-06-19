@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using DotQuery.Core.Async;
 using DotQuery.Core.Caches;
@@ -20,10 +21,13 @@ namespace DotQuery.Core.Test.Stub
         {
         }
 
-        protected override async Task<int> DoQueryAsync(AddQuery query)
+        protected override async Task<int> DoQueryAsync(AddQuery query, CancellationToken cancellationToken)
         {
             RealCalcCount++;
             await Task.Delay(m_delayTime);
+
+            cancellationToken.ThrowIfCancellationRequested();
+
             checked
             {
                 return query.Left + query.Right;

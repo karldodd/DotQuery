@@ -32,12 +32,12 @@ namespace DotQuery.Core.Test
             var query = new AddQuery { Left = 1, Right = 2 };
 
             Assert.True(
-                TimeCost(async () => { Assert.Equal(3, await executor.QueryAsync(query)); })
+                TimeCost(async () => { Assert.Equal(3, await executor.QueryAsync(query, CancellationToken.None)); })
                 >=
                 delayTime);
 
             Assert.True(
-                TimeCost(async () => { Assert.Equal(3, await executor.QueryAsync(query)); })
+                TimeCost(async () => { Assert.Equal(3, await executor.QueryAsync(query, CancellationToken.None)); })
                 <=
                 TimeSpan.FromMilliseconds(50), "Should hit cache");  //well, a cache hit
         }
@@ -53,17 +53,17 @@ namespace DotQuery.Core.Test
             var options = new EntryOptions { SlidingExpiration = TimeSpan.FromMinutes(1) };
 
             Assert.True(
-                TimeCost(async () => { Assert.Equal(3, await executor.QueryAsync(query, options)); })
+                TimeCost(async () => { Assert.Equal(3, await executor.QueryAsync(query, options, CancellationToken.None)); })
                 >=
                 delayTime);
 
             Assert.True(
-                TimeCost(async () => { Assert.Equal(3, await executor.QueryAsync(query, options)); })
+                TimeCost(async () => { Assert.Equal(3, await executor.QueryAsync(query, options, CancellationToken.None)); })
                 <=
                 TimeSpan.FromMilliseconds(50), "Should hit cache");  //well, a cache hit
 
             Assert.True(
-                TimeCost(async () => { Assert.Equal(3, await executor.QueryAsync(query)); })
+                TimeCost(async () => { Assert.Equal(3, await executor.QueryAsync(query, CancellationToken.None)); })
                 <=
                 TimeSpan.FromMilliseconds(50), "Should hit cache");  //well, a cache hit
         }
@@ -77,12 +77,12 @@ namespace DotQuery.Core.Test
             var query = new AddQuery { Left = 1, Right = 2 };
 
             Assert.True(
-                TimeCost(async () => { Assert.Equal(3, await executor.QueryAsync(query, EntryOptions.Empty)); })
+                TimeCost(async () => { Assert.Equal(3, await executor.QueryAsync(query, EntryOptions.Empty, CancellationToken.None)); })
                 >=
                 delayTime);
 
             Assert.True(
-                TimeCost(async () => { Assert.Equal(3, await executor.QueryAsync(query, EntryOptions.Empty)); })
+                TimeCost(async () => { Assert.Equal(3, await executor.QueryAsync(query, EntryOptions.Empty, CancellationToken.None)); })
                 >=
                 delayTime);
         }
@@ -96,17 +96,17 @@ namespace DotQuery.Core.Test
             var query = new AddQuery { Left = 1, Right = 2 };
 
             Assert.True(
-                TimeCost(async () => { Assert.Equal(3, await executor.QueryAsync(query, EntryOptions.Default)); })
+                TimeCost(async () => { Assert.Equal(3, await executor.QueryAsync(query, EntryOptions.Default, CancellationToken.None)); })
                 >=
                 delayTime);
 
             Assert.True(
-                TimeCost(async () => { Assert.Equal(3, await executor.QueryAsync(query, EntryOptions.Default)); })
+                TimeCost(async () => { Assert.Equal(3, await executor.QueryAsync(query, EntryOptions.Default, CancellationToken.None)); })
                 <=
                 TimeSpan.FromMilliseconds(50), "Should hit cache");  //well, a cache hit
 
             Assert.True(
-                TimeCost(async () => { Assert.Equal(3, await executor.QueryAsync(query)); })
+                TimeCost(async () => { Assert.Equal(3, await executor.QueryAsync(query, CancellationToken.None)); })
                 <=
                 TimeSpan.FromMilliseconds(50), "Should hit cache");  //well, a cache hit
         }
@@ -122,12 +122,12 @@ namespace DotQuery.Core.Test
             var options = new EntryOptions();
 
             Assert.True(
-                TimeCost(async () => { Assert.Equal(3, await executor.QueryAsync(query, options)); })
+                TimeCost(async () => { Assert.Equal(3, await executor.QueryAsync(query, options, CancellationToken.None)); })
                 >=
                 delayTime);
 
             Assert.True(
-                TimeCost(async () => { Assert.Equal(3, await executor.QueryAsync(query, options)); })
+                TimeCost(async () => { Assert.Equal(3, await executor.QueryAsync(query, options, CancellationToken.None)); })
                 <=
                 TimeSpan.FromMilliseconds(50), "Should hit cache");  //well, a cache hit
         }
@@ -143,14 +143,14 @@ namespace DotQuery.Core.Test
             var options = new EntryOptions { SlidingExpiration = TimeSpan.FromMilliseconds(1) };
 
             Assert.True(
-                TimeCost(async () => { Assert.Equal(3, await executor.QueryAsync(query, options)); })
+                TimeCost(async () => { Assert.Equal(3, await executor.QueryAsync(query, options, CancellationToken.None)); })
                 >=
                 delayTime);
 
             Thread.Sleep(1);
 
             Assert.True(
-                TimeCost(async () => { Assert.Equal(3, await executor.QueryAsync(query, options)); })
+                TimeCost(async () => { Assert.Equal(3, await executor.QueryAsync(query, options, CancellationToken.None)); })
                 >=
                 delayTime);
         }
@@ -166,14 +166,14 @@ namespace DotQuery.Core.Test
             var options = new EntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMilliseconds(1) };
 
             Assert.True(
-                TimeCost(async () => { Assert.Equal(3, await executor.QueryAsync(query, options)); })
+                TimeCost(async () => { Assert.Equal(3, await executor.QueryAsync(query, options, CancellationToken.None)); })
                 >=
                 delayTime);
 
             Thread.Sleep(1);
 
             Assert.True(
-                TimeCost(async () => { Assert.Equal(3, await executor.QueryAsync(query, options)); })
+                TimeCost(async () => { Assert.Equal(3, await executor.QueryAsync(query, options, CancellationToken.None)); })
                 >=
                 delayTime);
         }
@@ -189,14 +189,14 @@ namespace DotQuery.Core.Test
             var options = new EntryOptions { AbsoluteExpiration = DateTimeOffset.Now.AddMilliseconds(1) };
 
             Assert.True(
-                TimeCost(async () => { Assert.Equal(3, await executor.QueryAsync(query, options)); })
+                TimeCost(async () => { Assert.Equal(3, await executor.QueryAsync(query, options, CancellationToken.None)); })
                 >=
                 delayTime);
 
             Thread.Sleep(1);
 
             Assert.True(
-                TimeCost(async () => { Assert.Equal(3, await executor.QueryAsync(query, options)); })
+                TimeCost(async () => { Assert.Equal(3, await executor.QueryAsync(query, options, CancellationToken.None)); })
                 >=
                 delayTime);
         }
@@ -211,8 +211,8 @@ namespace DotQuery.Core.Test
             //use cached failed task
             var q2 = new AddQuery { Left = int.MaxValue, Right = int.MaxValue };
 
-            Assert.True(TryCatchException<OverflowException>(() => TimeCost(async () => { await executor.QueryAsync(q1); })));
-            Assert.True(TryCatchException<OverflowException>(() => TimeCost(async () => { await executor.QueryAsync(q2, new EntryOptions { Behaviors = (EntryBehaviors)(EntryBehaviors.Default - EntryBehaviors.ReQueryWhenErrorCached) }); })));
+            Assert.True(TryCatchException<OverflowException>(() => TimeCost(async () => { await executor.QueryAsync(q1, CancellationToken.None); })));
+            Assert.True(TryCatchException<OverflowException>(() => TimeCost(async () => { await executor.QueryAsync(q2, new EntryOptions { Behaviors = (EntryBehaviors)(EntryBehaviors.Default - EntryBehaviors.ReQueryWhenErrorCached) }, CancellationToken.None); })));
 
             Assert.Equal(1, executor.RealCalcCount);
         }
@@ -228,12 +228,12 @@ namespace DotQuery.Core.Test
             var options = new EntryOptions { SlidingExpiration = TimeSpan.FromMinutes(1) };
 
             Assert.True(
-                TimeCost(async () => { Assert.Equal(3, await executor.QueryAsync(query, options)); })
+                TimeCost(async () => { Assert.Equal(3, await executor.QueryAsync(query, options, CancellationToken.None)); })
                 >=
                 delayTime);
 
             Assert.True(
-                TimeCost(async () => { Assert.Equal(3, await executor.QueryAsync(query, options)); })
+                TimeCost(async () => { Assert.Equal(3, await executor.QueryAsync(query, options, CancellationToken.None)); })
                 <=
                 TimeSpan.FromMilliseconds(50), "Should hit cache");  //well, a cache hit
         }
@@ -249,12 +249,12 @@ namespace DotQuery.Core.Test
             var options = new EntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(1) };
 
             Assert.True(
-                TimeCost(async () => { Assert.Equal(3, await executor.QueryAsync(query, options)); })
+                TimeCost(async () => { Assert.Equal(3, await executor.QueryAsync(query, options, CancellationToken.None)); })
                 >=
                 delayTime);
 
             Assert.True(
-                TimeCost(async () => { Assert.Equal(3, await executor.QueryAsync(query, options)); })
+                TimeCost(async () => { Assert.Equal(3, await executor.QueryAsync(query, options, CancellationToken.None)); })
                 <=
                 TimeSpan.FromMilliseconds(50), "Should hit cache");  //well, a cache hit
         }
@@ -270,14 +270,39 @@ namespace DotQuery.Core.Test
             var options = new EntryOptions { AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(1) };
 
             Assert.True(
-                TimeCost(async () => { Assert.Equal(3, await executor.QueryAsync(query, options)); })
+                TimeCost(async () => { Assert.Equal(3, await executor.QueryAsync(query, options, CancellationToken.None)); })
                 >=
                 delayTime);
 
             Assert.True(
-                TimeCost(async () => { Assert.Equal(3, await executor.QueryAsync(query, options)); })
+                TimeCost(async () => { Assert.Equal(3, await executor.QueryAsync(query, options, CancellationToken.None)); })
                 <=
                 TimeSpan.FromMilliseconds(50), "Should hit cache");  //well, a cache hit
+        }
+
+        [Fact]
+        public async Task TestCancellationTokenAsync()
+        {
+            var delayTime = TimeSpan.FromMilliseconds(100);
+            var executor = CreateMemoryExecutor(delayTime);
+
+            var query = new AddQuery { Left = 1, Right = 2 };
+
+            using (var cts = new CancellationTokenSource())
+            {
+                cts.CancelAfter(TimeSpan.FromMilliseconds(1));
+
+                try
+                {
+                    await executor.QueryAsync(query, cts.Token);
+                }
+                catch (Exception ex)
+                {
+                    var ocex = ex as OperationCanceledException;
+
+                    Assert.NotNull(ocex);
+                }
+            }
         }
 
         private static AddAsyncQueryExecutor CreateMemoryExecutor(TimeSpan delayTime)
