@@ -10,6 +10,8 @@
     <PackageTags>dotquery;query;cache;result;async;extensions;webapi</PackageTags>
     <PackageProjectUrl>https://github.com/karldodd/DotQuery</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
+    <IncludeSymbols>true</IncludeSymbols>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/karldodd/DotQuery</RepositoryUrl>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
@@ -21,7 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DotQuery.Core\DotQuery.Core.csproj" />
-    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="1.1.2" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="2.0.0" />
     <PackageReference Include="System.Net.Http" Version="4.3.2" />
   </ItemGroup>
 
