@@ -6,6 +6,7 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <AssemblyName>DotQuery.Core.Test</AssemblyName>
     <PackageId>DotQuery.Core.Test</PackageId>
+    <IsPackable>false</IsPackable>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
     <RepositoryType>git</RepositoryType>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>

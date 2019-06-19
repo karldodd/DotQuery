@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Description>Extension libs and utilities of DotQuery, a lightweight query result caching framework for .NET</Description>
     <Copyright>Copyright @  2013</Copyright>
-    <VersionPrefix>1.4.0</VersionPrefix>
+    <VersionPrefix>2.0.0</VersionPrefix>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <AssemblyName>DotQuery.Extensions</AssemblyName>
     <PackageId>DotQuery.Extensions</PackageId>
